@@ -1,0 +1,23 @@
+.auth{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(-11px);
+    /* background-color: rgb(23 26 29 / 12%); */
+    backdrop-filter: blur(20px);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    gap: 20px;
+}
+.inactive{
+    display: none;
+    z-index: 0;
+    position: relative;
+}

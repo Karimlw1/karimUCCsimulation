@@ -1,0 +1,831 @@
+<!doctype html><html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CyberLab CTF V3</title>
+  <link rel="stylesheet" href="style.css">
+<style>
+/* ═══════════════════════════════════════════════════
+   NEXUS // CYBER OPERATIONS
+   Premium human-centered security workspace
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #080b10;
+  --panel: #0e131b;
+  --panel-2: #121a24;
+  --panel-3: #172230;
+
+  --line: #253443;
+  --line-soft: #1a2632;
+
+  --text: #e8edf4;
+  --muted: #8797aa;
+  --subtle: #586b7f;
+
+  --green: #69f0ae;
+  --cyan: #65d9f2;
+  --red: #ff7185;
+  --amber: #ffc875;
+
+  --mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  --sans: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --radius: 12px;
+  --radius-sm: 7px;
+
+  --shadow:
+    0 12px 35px rgba(0, 0, 0, .20);
+
+  --focus:
+    0 0 0 3px rgba(105, 240, 174, .13);
+}
+
+/* ── FOUNDATION ─────────────────────────────────── */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      ellipse at 50% -20%,
+      rgba(52, 103, 132, .13),
+      transparent 60%
+    ),
+    var(--bg);
+  color: var(--text);
+  font: 15px/1.7 var(--sans);
+  letter-spacing: .01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      rgba(125, 160, 190, .025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(125, 160, 190, .025) 1px,
+      transparent 1px
+    );
+  background-size: 36px 36px;
+}
+
+/* ── CONTROLS ───────────────────────────────────── */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .035em;
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    transform .18s ease;
+}
+
+button:hover {
+  border-color: #58718a;
+  background: var(--panel-3);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.pri {
+  background: var(--green);
+  color: #07140e;
+  border-color: var(--green);
+  font-weight: 800;
+}
+
+.pri:hover {
+  background: #8bffc2;
+  color: #07140e;
+  border-color: #8bffc2;
+}
+
+/* ── APP SHELL ──────────────────────────────────── */
+
+.shell {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.side {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 28px 18px;
+  background: rgba(12, 17, 24, .94);
+  border-right: 1px solid var(--line-soft);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 9px;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 850;
+  letter-spacing: .12em;
+}
+
+.brand i {
+  color: var(--green);
+  font-style: normal;
+}
+
+.sm {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.side .sm {
+  padding: 0 10px;
+}
+
+/* ── NAVIGATION ─────────────────────────────────── */
+
+.nav {
+  display: grid;
+  gap: 5px;
+}
+
+.nav button {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 12px 14px;
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 550;
+  letter-spacing: 0;
+}
+
+.nav button:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.nav button.on {
+  background: rgba(105, 240, 174, .075);
+  border-color: rgba(105, 240, 174, .15);
+  border-left: 3px solid var(--green);
+  color: var(--green);
+}
+
+/* ── MAIN CONTENT ───────────────────────────────── */
+
+.main {
+  width: 100%;
+  max-width: 1600px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 30px 28px 36px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+h1,
+h2,
+h3,
+p {
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(23px, 3vw, 32px);
+  line-height: 1.25;
+  font-weight: 750;
+  letter-spacing: -.045em;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.term {
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.term::after {
+  content: "_";
+  margin-left: 2px;
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── PANELS ─────────────────────────────────────── */
+
+.box {
+  position: relative;
+  min-width: 0;
+  padding: 20px 22px;
+  background: linear-gradient(
+    145deg,
+    rgba(18, 26, 36, .96),
+    rgba(12, 18, 26, .96)
+  );
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: border-color .2s ease;
+}
+
+.box:hover {
+  border-color: #2d4051;
+}
+
+/* ── METRIC CARDS ───────────────────────────────── */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+  margin-bottom: 18px;
+}
+
+.mt {
+  margin: 7px 0;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: clamp(21px, 2.3vw, 29px);
+  font-weight: 750;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.prog {
+  height: 5px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #202c39;
+}
+
+.prog div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    var(--cyan),
+    var(--green)
+  );
+  transition: width .35s ease;
+}
+
+/* ── FILTERS & INPUTS ───────────────────────────── */
+
+.tb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 15px;
+}
+
+.tb input,
+.tb select,
+.in,
+textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 13px;
+  background: #090e15;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.tb input,
+.tb select {
+  flex: 1 1 160px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--subtle);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: var(--focus);
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+/* ── CHALLENGE WORKSPACE ────────────────────────── */
+
+.lay {
+  display: grid;
+  grid-template-columns: minmax(250px, 340px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  max-height: 70vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 3px;
+}
+
+.ch {
+  --tc: var(--line);
+
+  min-width: 0;
+  padding: 14px 15px;
+  background: rgba(13, 20, 29, .9);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--tc);
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
+}
+
+.ch:hover {
+  background: var(--panel-2);
+  border-color: #3c5368;
+  transform: translateX(2px);
+}
+
+.ch.on {
+  background: rgba(105, 240, 174, .065);
+  border-color: rgba(105, 240, 174, .38);
+  border-left-color: var(--green);
+}
+
+.desc {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.desc pre {
+  position: relative;
+  overflow: auto;
+  max-width: 100%;
+  margin: 12px 0;
+  padding: 15px 16px;
+  background: #080d13;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #c7f7dc;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 13px/1.75 var(--mono);
+}
+
+.cp {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  padding: 5px 8px;
+  font-size: 10px;
+}
+
+/* ── STATUS LABELS ──────────────────────────────── */
+
+.pill {
+  display: inline-block;
+  margin: 3px 5px 3px 0;
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.pill.g {
+  color: var(--green);
+  border-color: rgba(105, 240, 174, .28);
+  background: rgba(105, 240, 174, .06);
+}
+
+/* ── FEEDBACK ───────────────────────────────────── */
+
+.fb {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.fb.er {
+  border-color: rgba(255, 113, 133, .55);
+  color: var(--red);
+  animation: shake .25s ease;
+}
+
+.err {
+  color: var(--red);
+}
+
+@keyframes shake {
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* ── VISUAL LINKS & TOOLS ───────────────────────── */
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.lad {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 12px 0 18px;
+}
+
+.node {
+  padding: 8px 11px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  font: 12px var(--mono);
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.node:hover,
+.node.d {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(101, 217, 242, .06);
+}
+
+.brow {
+  display: grid;
+  grid-template-columns: minmax(90px, 150px) minmax(0, 1fr) 60px;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+hr {
+  height: 1px;
+  margin: 18px 0;
+  background: var(--line-soft);
+  border: 0;
+}
+
+.hide {
+  display: none !important;
+}
+
+/* ── MODAL ─────────────────────────────────────── */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(3, 6, 10, .82);
+  backdrop-filter: blur(8px);
+}
+
+.mb {
+  width: min(460px, 100%);
+  padding: 23px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 25px 80px #0008;
+}
+
+/* ── SCROLLBARS ─────────────────────────────────── */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #33485a transparent;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #33485a;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #526b80;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .shell {
+    grid-template-columns: 205px minmax(0, 1fr);
+  }
+
+  .main {
+    padding: 21px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lay {
+    grid-template-columns: minmax(220px, 290px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .side {
+    gap: 14px;
+    padding: 17px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .nav button {
+    justify-content: center;
+    padding: 9px 6px;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .main {
+    padding: 17px;
+  }
+
+  .lay {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .list {
+    max-height: 300px;
+  }
+
+  .bar {
+    margin-bottom: 19px;
+  }
+}
+
+@media (max-width: 420px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .box {
+    padding: 14px;
+  }
+
+  .brow {
+    grid-template-columns: 1fr auto;
+  }
+
+  .brow > :nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* ── ACCESSIBILITY ──────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+</style>
+
+</head>
+<body>
+  
+  <div class="auth" id="auth">
+    <input type="text" id="authCode" placeholder="Enter code from karim"> 
+    <button id="submitAuth">CHECK AUTH</button>
+  </div>
+
+  <div class="shell">
+<aside class="side"><div><div class="brand">◈ KARIMLW1 CYBER<i>LAB</i></div><div class="sm">CTF WORKSPACE // V3.0</div></div>
+<div class="nav"><button data-p="ws" class="on">▦ Workspace</button><button data-p="paths">⛓ Paths</button><button data-p="tools">⚙ Toolbox</button><button data-p="stats">◔ Stats</button><button data-p="vault">🔑 Vault</button><button data-p="about">ⓘ About</button></div>
+<div class="box"><div class="sm">OPERATOR</div><b id="un"></b><div class="sm" id="rk"></div><button id="chu" style="width:100%;margin-top:8px">Rename</button></div>
+<div class="sm" style="margin-top:auto">Authorized practice only. Progress stays in this browser. No answer keys included.</div></aside>
+<main class="main"><div class="bar"><div><div class="term sm">root@KARIMLW1cyberlab:~# <span id="cmd">workspace</span></div><h1 id="pt">Challenge workspace</h1></div><div class="row"><span class="pill g">● offline</span><button id="ex">Export</button><button id="im">Import</button><input type="file" id="imf" accept=".json" class="hide"></div></div>
+<section id="ws"><div class="cards"><div class="box"><div class="sm">CHALLENGES</div><div class="mt" id="m1">0</div></div><div class="box"><div class="sm">SOLVED</div><div class="mt" id="m2">0</div><div class="prog"><div id="sb" style="width:0"></div></div></div><div class="box"><div class="sm">POINTS</div><div class="mt" id="m3">0</div></div><div class="box"><div class="sm">CATEGORIES</div><div class="mt" id="m4">0</div></div></div>
+<div class="tb"><input id="q" placeholder="grep challenges, tags..."><select id="cat"></select><select id="st"><option value="a">All</option><option value="u">Unsolved</option><option value="s">Solved</option></select><select id="so"><option value="pu">Points ↑</option><option value="pd">Points ↓</option><option value="t">Title</option></select></div>
+<div class="lay"><div class="box"><div class="row" style="justify-content:space-between"><b>Library</b><span class="sm" id="rc"></span></div><div class="list" id="list" style="margin-top:8px"></div></div><article class="box" id="det"></article></div></section>
+<section id="paths" class="hide"></section>
+<section id="tools" class="hide"><div class="lay"><div class="box"><h3>Decoder lab</h3><textarea id="tin" placeholder="Paste input: encoded text, hex, token, log lines..."></textarea><div class="row" style="margin-top:8px"><input class="in" id="tkey" placeholder="key / shift for XOR, Caesar" style="max-width:220px"></div><div class="tools" id="tbtn"></div><textarea id="tout" style="min-height:200px" placeholder="Output" readonly></textarea></div><div class="box"><h3>Log analyzer</h3><p class="sm">Paste auth or access logs in the input box, then run. It counts failed and accepted events per IP, lists users and time range, and prints accepted lines.</p><button class="pri" id="lg">Analyze log</button><hr><h3>Tips</h3><p class="sm">Auto-detect tries Base64, hex, binary, URL, ROT13 and JWT on your input and lists readable results.</p></div></div></section>
+<section id="stats" class="hide"><div class="box" id="sbox"></div></section>
+<section id="vault" class="hide"><div class="box"><h2>Flag vault</h2><p class="sm">Real answer checking. Flags are never stored in plain text, only salted SHA-256 hashes. Keys loaded: <b id="vn">0</b></p>
+<textarea id="vin" placeholder="One per line, id then flag:&#10;44: UCC{example_flag}"></textarea>
+<div class="row" style="margin-top:8px"><button class="pri" id="vb">Add to vault</button><button id="vd">Download vault file</button><button id="vl">Load vault file</button><input type="file" id="vf" accept=".json" class="hide"><button class="dng" id="vc">Clear vault</button></div><div id="vm" class="sm" style="margin-top:8px"></div>
+<hr><p class="sm"><b>Practice with friends:</b> one person who knows the flags pastes them here, then clicks Download vault file. Everyone else puts <code>flags.hash.json</code> next to <code>index.html</code> (it loads by itself) or uses Load vault file. Friends can check answers but cannot read them. Challenges without a key stay format-only. Short flags can be brute-forced by a determined person, so this is for friendly practice, not strong security.</p></div></section>
+<section id="about" class="hide"><div class="box"><h2>About V3</h2><ul><li>Loads <code>challenges.json</code> from the same folder. Run <code>python3 -m http.server 8000</code> there, or load the file manually if prompted.</li><li>Submit checks the flag against the hashed key in the Vault. Challenges without a key are format-only; mark those solved yourself once the portal accepts them.</li><li>Notes, hints used and solve dates are stored locally. Use Export for backups.</li></ul><p class="sm">Keyboard: press / to search, j and k to move through the list.</p></div></section></main></div>
+<div id="pm" class="modal hide"><div class="box mb"><h3>Operator name</h3><input class="in" id="ni" maxlength="30"><div class="row" style="margin-top:10px"><button class="pri" id="ns">Save</button><button id="nc">Cancel</button></div></div></div>
+<script>
+  window.EMBED_C={"44": {"id": "44", "title": "Night Shift Trail", "category": "Linux", "points": 50, "type": "standard", "description": "Review this fictional authentication excerpt. Find the successful sign-in at `09:12:09Z`, then submit `UCC{account_source_address}` with dots in the address changed to underscores. The log is synthetic; report only what it shows.\n\n```text\nJul 14 09:03:11 auth-gw sshd[2141]: Failed password for mira from 198.51.100.24 port 48102 ssh2\nJul 14 09:03:18 auth-gw sshd[2144]: Failed password for mira from 198.51.100.24 port 48113 ssh2\nJul 14 09:04:02 auth-gw sshd[2150]: Failed password for sam from 192.0.2.77 port 50122 ssh2\nJul 14 09:04:09 auth-gw sshd[2153]: Failed password for mira from 198.51.100.24 port 48191 ssh2\nJul 14 09:05:10 auth-gw sshd[2160]: Failed password for guest from 203.0.113.44 port 41220 ssh2\nJul 14 09:05:42 auth-gw sshd[2168]: Failed password for mira from 198.51.100.24 port 48277 ssh2\nJul 14 09:06:02 auth-gw sshd[2172]: Failed password for sam from 192.0.2.77 port 50144 ssh2\nJul 14 09:07:19 auth-gw sshd[2180]: Failed password for guest from 203.0.113.44 port 41301 ssh2\nJul 14 09:12:09 auth-gw sshd[2230]: Accepted password for mira from 198.51.100.24 port 49113 ssh2\n```\n\n[Review the Linux path](/training-linux-foundations) before submitting.", "connection_info": null, "file_urls": [], "hints": [{"id": 20, "cost": 0, "content": "Search for the exact accepted-login phrase and retain the full line."}, {"id": 21, "cost": 0, "content": null}], "tags": ["cyber-stars-training", "linux", "logs", "path-linux", "search", "training"], "solves": 214, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:02.846509+00:00", "saved_files": []}, "52": {"id": "52", "title": "First Footprints", "category": "Linux", "points": 10, "type": "standard", "description": "A terminal session printed this synthetic output. Submit UCC{username_directory} using the username from whoami and the final directory name from pwd.\n\nwhoami -> learner\npwd -> /home/learner/practice\n\nThis is a command-output reading exercise. No terminal is required.", "connection_info": null, "file_urls": [], "hints": [{"id": 36, "cost": 0, "content": null}, {"id": 37, "cost": 0, "content": null}], "tags": ["starter", "linux", "command-line", "training"], "solves": 215, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:03.801359+00:00", "saved_files": []}, "53": {"id": "53", "title": "Permission Postcard", "category": "Linux", "points": 10, "type": "standard", "description": "Read the mode shown for this synthetic file. Convert the owner, group, and other permission triplets to octal, then submit UCC{mode}.\n\n-rw-r----- 1 learner analysts 84 Oct 13 09:10 notes.txt\n\nUse only the supplied line; do not change permissions on a real system.", "connection_info": null, "file_urls": [], "hints": [{"id": 38, "cost": 0, "content": null}, {"id": 39, "cost": 0, "content": null}], "tags": ["starter", "linux", "permissions", "training"], "solves": 208, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:04.804315+00:00", "saved_files": []}, "63": {"id": "63", "title": "Cron Whisper", "category": "Linux", "points": 125, "type": "standard", "description": "A fictional server's `/etc/crontab` is below. Standard Vixie/POSIX cron rules apply, including how the **day-of-month** and **day-of-week** fields combine when both are restricted.\n\n```text\n# m   h   dom mon dow   user    command\n30   3   15  *   2     batch   /usr/local/bin/digest.sh\n30   3   *   *   3     batch   /usr/local/bin/cleanup.sh\n*/15 2-4 *   *   1-5   root    /usr/local/bin/snapshot.sh\n30   3   15  *   *     batch   /usr/local/bin/sync.sh\n*/20 3   *   *   2     batch   /usr/local/bin/report.sh\n30   3   *   *   2     backup  /usr/local/bin/mirror.sh\n0    3   20  10  *     batch   /usr/local/bin/prune.sh\n30   3   20  11  *     batch   /usr/local/bin/vacuum.sh\n```\n\nIt is **Tuesday 2026-10-20, 03:30** local time. Exactly one job running as user `batch` fires at that minute. Submit `UCC{script_name}` where the script name has no path or `.sh`.", "connection_info": null, "file_urls": [], "hints": [{"id": 53, "cost": 0, "content": null}, {"id": 54, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-linux", "linux", "cron", "training"], "solves": 191, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:05.852601+00:00", "saved_files": []}, "92": {"id": "92", "title": "Split Signal", "category": "Linux", "points": 300, "type": "standard", "description": "An incident fired simultaneously across three fictional servers at the same real-world instant: **2026-10-21 18:00 UTC**. Each server keeps its crontab in **local time**, and each server's UTC offset is shown as a comment above its table. Standard Vixie/POSIX cron rules apply, including how the day-of-month and day-of-week fields combine when both are restricted.\n\n```text\n# server srv-kla  (local clock = UTC+3)\n# m  h  dom mon dow  user   command\n20  5  *   *   4    svc    /usr/local/bin/verify.sh\n0   1  *   *   2    batch  /usr/local/bin/sync.sh\n45  10 *   *   1    ops    /usr/local/bin/snapshot.sh\n25  2  *   *   6    ops    /usr/local/bin/report.sh\n0   21 21  *   3    ops    /usr/local/bin/compact.sh\n\n# server srv-utc  (local clock = UTC+0)\n# m  h  dom mon dow  user   command\n50  23 *   *   2    svc    /usr/local/bin/archive.sh\n45  23 *   *   5    batch  /usr/local/bin/purge.sh\n35  12 *   *   0    ops    /usr/local/bin/mirror.sh\n0   14 *   *   6    batch  /usr/local/bin/vacuum.sh\n0   13 *   *   6    ops    /usr/local/bin/prune.sh\n\n# server srv-west  (local clock = UTC-5)\n# m  h  dom mon dow  user   command\n5   12 *   *   0    svc    /usr/local/bin/rotate.sh\n30  0  *   *   6    batch  /usr/local/bin/cleanup.sh\n55  19 *   *   5    batch  /usr/local/bin/audit.sh\n20  23 *   *   1    svc    /usr/local/bin/reindex.sh\n30  4  *   *   0    svc    /usr/local/bin/digest.sh\n```\n\nConvert the incident instant to each server's local time, then find the single cron line, across all three servers, that fires at that exact local moment. Submit `UCC{server_script}` using the server's short name and the script name with no path or `.sh`, e.g. `UCC{srv-utc_sync}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 128, "cost": 0, "content": null}, {"id": 129, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-linux", "linux", "cron", "timezones", "training"], "solves": 139, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:06.992419+00:00", "saved_files": []}, "95": {"id": "95", "title": "Breadcrumb Trail", "category": "Linux", "points": 300, "type": "dynamic_iac", "description": "Submit the `UCC{...}` value you recover.\n\n**Scenario.** You land on a fictional diagnostic host as a low-privilege user. Somewhere on this box is a way to become root. Find it, then find what root can see that you cannot.", "connection_info": null, "file_urls": [], "hints": [{"id": 137, "cost": 0, "content": null}, {"id": 138, "cost": 0, "content": null}, {"id": 139, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "instance", "path-linux", "linux", "privilege-escalation", "suid", "training"], "solves": 80, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:07.925494+00:00", "saved_files": []}, "45": {"id": "45", "title": "Profile Preview", "category": "Web Security", "points": 75, "type": "standard", "description": "An offline code and API-trace review. The fictional session belongs to subject `104`. Identify the profile returned without an ownership check and submit `UCC{profile_ID}`. Do not probe any live service.\n\nRoute excerpt:\n```python\n@app.get(\"/api/profile/\")\ndef profile_preview(profile_id):\n profile = Profile.query.get_or_404(profile_id)\n return {\"id\": profile.id, \"display_name\": profile.display_name,\n \"owner_id\": profile.owner_id}\n```\n\nSynthetic trace:\n```text\nsubject=104 GET /api/profile/104 -> 200 {id:104, owner_id:104}\nsubject=104 GET /api/profile/219 -> 200 {id:219, owner_id:219}\n```\n\n[Review the Web Security path](/training-web-security).", "connection_info": null, "file_urls": [], "hints": [{"id": 22, "cost": 0, "content": null}, {"id": 23, "cost": 0, "content": null}], "tags": ["api", "authorization", "cyber-stars-training", "path-web-security", "web", "training"], "solves": 156, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:08.775637+00:00", "saved_files": []}, "54": {"id": "54", "title": "Response Receipt", "category": "Web Security", "points": 10, "type": "standard", "description": "Review this fictional HTTP response. Submit UCC{status_route} with the status code and destination route. Replace the slash with an underscore.\n\nHTTP/1.1 302 Found\nLocation: /login\nContent-Type: text/html\n\nA redirect is not evidence of a vulnerability. This is an offline reading exercise; do not test a live site.", "connection_info": null, "file_urls": [], "hints": [{"id": 40, "cost": 0, "content": null}, {"id": 41, "cost": 0, "content": null}], "tags": ["starter", "web", "http", "training"], "solves": 177, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:09.576319+00:00", "saved_files": []}, "64": {"id": "64", "title": "Object Lookup", "category": "Web Security", "points": 125, "type": "standard", "description": "An API's access rule: **a user may read a document if they own it, it is shared with them, or their role is `admin`.** Anything else must return 403. Below are the roles, the ownership table, and a slice of the access log of a fictional document service.\n\nRoles: alice=user, bob=user, carol=admin, dave=user\n\n```text\ndoc   owner   shared_with\nD101  bob     -\nD102  alice   -\nD103  dave    alice\nD104  alice   -\nD105  alice   dave\nD106  dave    -\n```\n\n```text\nreq-2046  alice  GET /api/docs/D106  -> 200\nreq-940b  carol  GET /api/docs/D102  -> 200\nreq-7322  carol  GET /api/docs/D104  -> 200\nreq-b3d6  dave   GET /api/docs/D103  -> 200\nreq-d4e2  bob    GET /api/docs/D104  -> 403\nreq-059f  alice  GET /api/docs/D105  -> 200\nreq-928f  carol  GET /api/docs/D105  -> 200\nreq-155e  bob    GET /api/docs/D102  -> 403\nreq-0c2a  dave   GET /api/docs/D105  -> 200\nreq-67ec  bob    GET /api/docs/D101  -> 200\nreq-6993  alice  GET /api/docs/D104  -> 200\nreq-2dbe  bob    GET /api/docs/D105  -> 403\nreq-f866  alice  GET /api/docs/D102  -> 200\nreq-df98  carol  GET /api/docs/D103  -> 200\nreq-5f12  dave   GET /api/docs/D101  -> 403\nreq-5a87  carol  GET /api/docs/D106  -> 200\n```\n\nExactly one request returned **200 when the rule says it should have been refused**. Submit `UCC{request_id}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 55, "cost": 0, "content": null}, {"id": 56, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-web-security", "web", "authorization", "idor", "training"], "solves": 165, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:10.950762+00:00", "saved_files": []}, "73": {"id": "73", "title": "Session Relay", "category": "Web Security", "points": 200, "type": "dynamic_iac", "description": "Submit the `UCC{...}` value you recover.\n\n**Scenario.** A staff portal exposes a small JSON API and gives you a guest account. The vault is for administrators only. Chain what the API lets you see into admin access.", "connection_info": null, "file_urls": [], "hints": [{"id": 74, "cost": 0, "content": null}, {"id": 75, "cost": 0, "content": null}, {"id": 76, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "instance", "path-web-security", "web", "authorization", "api", "training"], "solves": 107, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:12.092018+00:00", "saved_files": []}, "91": {"id": "91", "title": "Stale Role Window", "category": "Web Security", "points": 300, "type": "standard", "description": "A fictional API authorizes `admin_action` requests by checking a signed JWT's `jwt_role` claim and its signature/expiry only \u2014 it never re-checks the user's **current** role at request time. The identity service's own role-change timeline is below (`t` = minutes since start), followed by the request log.\n\nRole timeline:\n\n```text\nuser    t    new_role\nalice   0    user\nbob     0    user\ncarol   0    admin\ncarol   40   user\nderek   0    admin\nderek   46   user\nelena   0    user\n```\n\nRequest log:\n\n```text\nreq_id       user     jwt_role   jwt_iat   t     action\nreq-eb53     elena    user       7         9     read_action\nreq-434b     derek    admin      17        19    admin_action\nreq-ce1e     alice    user       7         9     read_action\nreq-389f     carol    admin      35        66    admin_action\nreq-02bb     bob      user       84        86    read_action\nreq-b30b     carol    admin      -1        1     admin_action\nreq-7634     alice    user       67        69    read_action\nreq-ff49     carol    admin      1         3     admin_action\nreq-5474     bob      user       9         11    read_action\nreq-6269     elena    user       64        66    read_action\nreq-a38b     derek    admin      0         2     admin_action\n```\n\nExactly one `admin_action` request was authorized by a token claiming `admin`, even though the user's true role at that request's time `t` (per the timeline) was no longer admin by then. Submit `UCC{request_id}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 126, "cost": 0, "content": null}, {"id": 127, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-web-security", "web", "authorization", "jwt", "stale-token", "training"], "solves": 119, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:13.115077+00:00", "saved_files": []}, "46": {"id": "46", "title": "Bytecode Breadcrumbs", "category": "Reverse Engineering", "points": 100, "type": "standard", "description": "A tiny synthetic decoder applies three operations to each byte. Trace the code; do not execute unknown binaries. Recover the UTF-8 training token and submit it exactly.\n\n```python\ndef decode(hex_text):\n out = bytearray()\n for i, value in enumerate(bytes.fromhex(hex_text)):\n value ^= 0x31\n value = (value - 3 * i) & 0xff\n value = ((value >> 1) | ((value & 1) << 7)) & 0xff # rotate right by 1\n out.append(value)\n return out.decode(\"utf-8\")\n```\n\nEncoded bytes:\n```text\n32b736a0a39c999f1da19b9925168c9310110e05048e88fe02\n```\n\nWrite down each intermediate value for the first two bytes. [Open the reverse-engineering path](/training-reverse-engineering).", "connection_info": null, "file_urls": [], "hints": [{"id": 24, "cost": 0, "content": null}, {"id": 25, "cost": 0, "content": null}], "tags": ["bytes", "cyber-stars-training", "path-reverse-engineering", "reverse-engineering", "static-analysis", "training"], "solves": 152, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:13.932997+00:00", "saved_files": []}, "60": {"id": "60", "title": "Strings Attached", "category": "Reverse Engineering", "points": 10, "type": "standard", "description": "A fictional vendor tool, `lanternd`, is on your desk. You cannot run it, but a colleague saved the output of `strings lanternd`. The binary contains several license keys, only one of which activates the production build.\n\n```text\n/lib64/ld-linux-x86-64.so.2\nlibcurl.so.4\nGLIBC_2.34\nusage: lanternd [--sync] [--verbose]\nsync_cache=cacd92\nexport_cache=19494f\nupdate_telemetry=693c8e\nold_key=KEY-BVCG-GJ6Z-QW4F [deprecated]\nactivation_key=KEY-AW6C-YR7W-ZL9U [production]\nrender_url=https://updates.example.test/v2\ntest_key=KEY-YMN2-GJQQ-ETBX [sandbox]\nexport_update=18726f\nrender_telemetry=7a3fbd\nexport_export=e46f85\n```\n\nSubmit `UCC{key}` using the **production** activation key in lowercase, with hyphens changed to underscores.", "connection_info": null, "file_urls": [], "hints": [{"id": 48, "cost": 0, "content": null}, {"id": 49, "cost": 0, "content": null}], "tags": ["ladder", "tier-1-starter", "path-reverse-engineering", "reverse-engineering", "strings", "training"], "solves": 144, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:14.740006+00:00", "saved_files": []}, "66": {"id": "66", "title": "Loop Logic", "category": "Reverse Engineering", "points": 125, "type": "standard", "description": "A fictional licensing tool hides its activation string with this routine. You have the source and the encoded output; the original is the flag.\n\n```python\nKEY  = [199, 124, 17, 97]\nSEED = 131\n\ndef encode(data: bytes) -> bytes:\n    out, acc = [], SEED\n    for i, ch in enumerate(data):\n        v = (ch + KEY[i % len(KEY)] + acc) & 0xFF\n        v ^= (i * 7 + 3) & 0xFF\n        out.append(v)\n        acc = (acc + ch) & 0xFF      # accumulates the PLAINTEXT byte\n    return bytes(out)\n```\n\nEncoded output (hex):\n\n```text\n9c9d7e22131619c082e027a0defe0e4ccbab16ec\n```\n\nReverse the routine and submit the original string.", "connection_info": null, "file_urls": [], "hints": [{"id": 59, "cost": 0, "content": null}, {"id": 60, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-reverse-engineering", "reverse-engineering", "algorithms", "training"], "solves": 138, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:15.919871+00:00", "saved_files": []}, "74": {"id": "74", "title": "Branch Decision", "category": "Reverse Engineering", "points": 200, "type": "dynamic_iac", "description": "Submit the `UCC{...}` value you recover.\n\n**Scenario.** A fictional archive client validates a passphrase in the browser before it talks to the server. The check script is public. Work out what it accepts; guessing against the server is deliberately slow.", "connection_info": null, "file_urls": [], "hints": [{"id": 77, "cost": 0, "content": null}, {"id": 78, "cost": 0, "content": null}, {"id": 79, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "instance", "path-reverse-engineering", "reverse-engineering", "javascript", "training"], "solves": 96, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:17.095355+00:00", "saved_files": []}, "100": {"id": "100", "title": "License Routine", "category": "Reverse Engineering", "points": 200, "type": "standard", "description": "A fictional license-check routine's disassembly, translated to pseudocode for readability, checks one character of the key at a time, independently:\n\n```pseudo\nfor i in 0..n-1:\n    v = KEY[i]\n    v = (v * M[i]) mod 256      ; MUL  (M[i] is always odd)\n    v = (v + C[i]) mod 256      ; ADD\n    if v != TARGET[i]: fail\n```\n\nThe per-position constants, read from the binary, are below.\n\n```text\ni    M     C     TARGET\n0    39    129   23\n1    117   128   169\n2    41    48    206\n3    101   86    195\n4    79    250   198\n5    63    246   142\n```\n\nEvery `M[i]` is odd, so each step is invertible modulo 256. Recover `KEY[i]` for every position, decode as ASCII, and submit `UCC{key}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 151, "cost": 0, "content": null}, {"id": 152, "cost": 0, "content": null}, {"id": 153, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-reverse-engineering", "reverse-engineering", "modular-arithmetic", "crackme", "training"], "solves": 100, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:18.471081+00:00", "saved_files": []}, "47": {"id": "47", "title": "Evidence Locker", "category": "Forensics", "points": 75, "type": "standard", "description": "Three synthetic exports were copied for an incident review. Compare each file's SHA-256 digest with the reference manifest. Submit `UCC{filename_without_extension}` for the export whose bytes do not match. Preserve the originals.\n\nReference manifest:\n```text\n0442819f9536b5b9310f2607c18cf9b11cf8b790696ff324f32c9e3af884adc6  export-01.txt\nb6443193f3b1de725df520a003b3e6af77e4c7a0bee696c7c62786bb038da9c5  export-02.txt\n2c767a1889de536d9a3fa6cece06e8b0b5c825f17aaabe7fe51fc872dea5beb6  export-03.txt\n```\n\nUse these exact UTF-8 file contents, each ending with one LF newline:\n```text\nexport-01.txt\ncase=CS26-014\ndevice=workstation-07\nevent=browser-cache-review\nstatus=complete\n\nexport-02.txt\ncase=CS26-014\ndevice=workstation-11\nevent=removable-media-review\nreviewer=training-team\nstatus=complete\n\nexport-03.txt\ncase=CS26-014\ndevice=server-02\nevent=authentication-review\nstatus=complete\n```\n\n[Review the forensics path](/training-digital-forensics).", "connection_info": null, "file_urls": [], "hints": [{"id": 26, "cost": 0, "content": null}, {"id": 27, "cost": 0, "content": null}], "tags": ["cyber-stars-training", "forensics", "integrity", "path-digital-forensics", "sha256", "training"], "solves": 147, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:19.684101+00:00", "saved_files": []}, "55": {"id": "55", "title": "Hash Match Warmup", "category": "Forensics", "points": 10, "type": "standard", "description": "An analyst compared SHA-256 digests for three synthetic files with a trusted training manifest. Which file matches the reference digest exactly? Submit UCC{filename} without the extension.\n\nReference:   9f2a\nalpha.txt:   9f2a\nbravo.txt:   9f2b\ncharlie.txt: 9f20\n\nThese shortened values are teaching examples, not real SHA-256 digests.", "connection_info": null, "file_urls": [], "hints": [{"id": 42, "cost": 0, "content": null}, {"id": 43, "cost": 0, "content": null}], "tags": ["starter", "forensics", "integrity", "training"], "solves": 151, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:21.059411+00:00", "saved_files": []}, "104": {"id": "104", "title": "Not Actually Deleted", "category": "Forensics", "points": 10, "type": "standard", "description": "`evidence.img` is a real, raw 1.44MB FAT12 floppy image pulled from case **2026-9228-HR**. A file was deleted from it immediately after an incident was triaged, but nothing has written to the disk since -- its data is still sitting in unallocated clusters.\n\nOpen the image in a real forensic tool (Autopsy's **Add Data Source \u2192 Disk Image**, or `fls -r` / `icat` from The Sleuth Kit, or write your own FAT12 reader) and recover the deleted file. Its content is Base64 -- decode it to read the note.\n\nSubmit the flag exactly as it appears in the decoded note.", "connection_info": null, "file_urls": ["/files/257eb0a82c24d6db5f8e93981c66a3b4/evidence.img?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjYxfQ.at_qSQ.NbWNDA2U78nCug66DHjpy9tPhX4"], "hints": [{"id": 163, "cost": 0, "content": null}, {"id": 164, "cost": 0, "content": null}, {"id": 165, "cost": 0, "content": null}], "tags": ["ladder", "tier-1-starter", "path-digital-forensics", "forensics", "fat12", "undelete", "training"], "solves": 70, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:22.071606+00:00", "saved_files": ["challenges/104-not-actually-deleted/files/evidence.img"]}, "59": {"id": "59", "title": "Night Shift: Archive Trace", "category": "Forensics", "points": 20, "type": "dynamic_iac", "description": "Launch a private instance, then use its evidence bundle to reconstruct the 02:14 UTC archive export. Correlate the authentication session with the edge request ID, find the matching vault audit row, and decode its `receipt_b64` field. Submit the recovered `UCC{...}` value. Training evidence is synthetic.", "connection_info": null, "file_urls": [], "hints": [], "tags": ["training"], "solves": 98, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:25.824081+00:00", "saved_files": []}, "65": {"id": "65", "title": "Timeline Builder", "category": "Forensics", "points": 125, "type": "standard", "description": "Three log sources from a fictional incident use **different time formats**. `fw` is UTC ISO-8601. `app` is **local time, day/month/year**, with the offset shown. `edr` is Unix epoch **milliseconds** from a host whose clock ran **252 seconds ahead** of true time.\n\nfw:\n```text\n2026-10-13T11:14:04Z FW-661 HIGH block tcp/445\n2026-10-13T11:09:56Z FW-651 LOW block tcp/445\n2026-10-13T11:16:07Z FW-780 LOW block tcp/445\n```\n\napp:\n```text\n13/10/2026 14:12:52 +0300 APP-753 HIGH login-anomaly\n13/10/2026 14:19:26 +0300 APP-503 LOW login-anomaly\n```\n\nedr:\n```text\n1791890371000 EDR-667 HIGH proc-injection\n```\n\nAfter normalising everything to true UTC, find the **earliest event with severity HIGH**. Submit `UCC{event_id}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 57, "cost": 0, "content": null}, {"id": 58, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-digital-forensics", "forensics", "timeline", "training"], "solves": 140, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:26.589758+00:00", "saved_files": []}, "71": {"id": "71", "title": "Deleted Not Gone", "category": "Forensics", "points": 200, "type": "standard", "description": "A fictional disk image's file table and a dump of its **unallocated** clusters (12 bytes shown per cluster; trailing zero bytes are padding) are below. Deleted files keep their data runs until the clusters are reused.\n\n```text\nentry name state data runs (cluster order)\n0004 budget_2026.xlsx in-use 19,46\n0007 incident_notes.txt DELETED 104,142,121,108,128\n0009 menu.txt DELETED 118,136,157,132,158,146,125\n0011 photo_001.jpg in-use 62,92\n```\n\n```text\ncluster 0104: 61 57 35 6a 61 57 52 6c 62 6e 51 67 |aW5jaWRlbnQg|\ncluster 0108: 4e 44 42 69 4f 47 59 79 4f 54 4d 34 |NDBiOGYyOTM4|\ncluster 0110: 01 ce d7 70 10 19 25 bf 01 9a 13 aa |...p..%.....|\ncluster 0114: c5 3e b5 b7 c8 d0 bb fb 22 0a 4a 70 |.>......\".Jp|\ncluster 0118: 59 32 46 6d 5a 58 52 6c 63 6d 6c 68 |Y2FmZXRlcmlh|\ncluster 0121: 65 32 4e 68 63 6e 5a 6c 5a 46 39 69 |e2NhcnZlZF9i|\ncluster 0125: 64 43 42 68 62 47 77 3d 00 00 00 00 |dCBhbGw=....|\ncluster 0128: 4d 57 4e 39 00 00 00 00 00 00 00 00 |MWN9........|\ncluster 0132: 61 79 77 67 62 6d 39 30 61 47 6c 75 |aywgbm90aGlu|\ncluster 0136: 49 47 31 6c 62 6e 55 67 5a 6d 39 79 |IG1lbnUgZm9y|\ncluster 0142: 62 6d 39 30 5a 54 6f 67 56 55 4e 44 |bm90ZTogVUND|\ncluster 0146: 64 6d 55 67 61 47 56 79 5a 53 42 68 |dmUgaGVyZSBh|\ncluster 0155: 6e e6 83 a8 e2 75 d6 9b 49 3c f2 65 |n....u..I<.e|\ncluster 0157: 49 47 35 6c 65 48 51 67 64 32 56 6c |IG5leHQgd2Vl|\ncluster 0158: 5a 79 42 7a 5a 57 35 7a 61 58 52 70 |ZyBzZW5zaXRp|\n```\n\nRecover the deleted file `incident_notes.txt`: read its clusters **in the order its data runs list them**, concatenate the text, and decode it (it is Base64). The recovered note contains the flag; submit it exactly.", "connection_info": null, "file_urls": [], "hints": [{"id": 69, "cost": 0, "content": null}, {"id": 70, "cost": 0, "content": null}, {"id": 71, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "path-digital-forensics", "forensics", "file-carving", "training"], "solves": 138, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:27.880881+00:00", "saved_files": []}, "94": {"id": "94", "title": "Signal in the Noise", "category": "Forensics", "points": 300, "type": "standard", "description": "A monitoring tap captured outbound DNS queries from a host suspected of exfiltrating data one byte per query. Exfil queries always look like `.`. The real exfil channel carries a **complete, consecutive** index run (0, 1, 2, ... with no gaps); any other domain with hex-looking labels is a decoy, and its indices are incomplete or non-consecutive. Each real byte is also masked before encoding: `encoded_byte = real_byte XOR ((index * 7 + 13) mod 256)`.\n\n```text\nquery 101a.metrics.cloudping.io\nquery safebrowsing.googleapis.com\nquery 045d.status.cache-sync.dev\nquery api.github.com\nquery 071b.metrics.cloudping.io\nquery cdn.jsdelivr.net\nquery 1cd5.metrics.cloudping.io\nquery 0558.status.cache-sync.dev\nquery cdn.jsdelivr.net\nquery 007a.status.cache-sync.dev\nquery 034b.status.cache-sync.dev\nquery 027a.status.cache-sync.dev\nquery safebrowsing.googleapis.com\nquery api.github.com\nquery 1716.edge.content-sync.net\nquery 0557.edge.content-sync.net\nquery 1877.edge.content-sync.net\nquery www.google.com\nquery 0166.status.cache-sync.dev\nquery safebrowsing.googleapis.com\nquery api.github.com\nquery cdn.jsdelivr.net\nquery 097b.metrics.cloudping.io\nquery 1af0.metrics.cloudping.io\n```\n\nIdentify the one domain carrying the complete run, undo the mask for each index, reassemble in index order, and submit `UCC{recovered_text}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 132, "cost": 0, "content": null}, {"id": 133, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-digital-forensics", "forensics", "dns", "exfiltration", "xor", "training"], "solves": 105, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:29.143187+00:00", "saved_files": []}, "48": {"id": "48", "title": "Key Reuse", "category": "Cryptography", "points": 100, "type": "standard", "description": "A toy XOR stream was incorrectly reused. The first plaintext is known; both ciphertexts were encrypted with the same repeating key. Recover the second plaintext and submit the token inside it. This is a training demonstration, never a production design.\n\nKnown plaintext 1:\n```text\ntraining notice: exercise data only; no real credentials or personal records are present.\n```\n\nCiphertext 1 (hex):\n```text\n1742050c3d1d0f15170d5f100c30115b52521b5516063a07045253024405453c1a0d0b0c435e0b452111001e1700420101361a151b560f43440a2154111745105f0a043f541317540c420016731513171713420116361a155c\n```\n\nCiphertext 2 (hex):\n```text\n3673271e2b1b132d45064517000c1804135c106f17112101020642115519\n```\n\n[Study XOR and key reuse](/training-cryptography).", "connection_info": null, "file_urls": [], "hints": [{"id": 28, "cost": 0, "content": null}, {"id": 29, "cost": 0, "content": null}], "tags": ["cryptography", "cyber-stars-training", "key-reuse", "path-cryptography", "xor", "training"], "solves": 145, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:30.542121+00:00", "saved_files": []}, "56": {"id": "56", "title": "Base64 Postcard", "category": "Cryptography", "points": 10, "type": "standard", "description": "Base64 is an encoding, not encryption. Decode the supplied training text and submit the decoded token exactly.\n\nVUND e2Jhc2U2NF93YXJtdXB9\n\nRemove the visual space before decoding; it was added only to make the example easier to read. Work offline.", "connection_info": null, "file_urls": [], "hints": [{"id": 44, "cost": 0, "content": null}, {"id": 45, "cost": 0, "content": null}], "tags": ["starter", "cryptography", "encoding", "training"], "solves": 152, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:31.382248+00:00", "saved_files": []}, "67": {"id": "67", "title": "Hash or Not", "category": "Cryptography", "points": 125, "type": "standard", "description": "A fictional web app leaked its user table. Format is `user:algorithm$hash` for unsalted hashes and `user:sha256$salt$hash` for salted ones, where the salted hash is `SHA-256(salt + password)` in hex.\n\n```text\nintern3:md5$98e89bbbb4878ec0cc7833f0f91276c2\nintern2:sha1$9e9db14091a86f8dec766e3c8bf36ac29209b5e7\nanalyst:sha256$3524ae$0000000000000000000000000000000000000000000000000000000000000000\nops_admin:sha256$afebbc$37ac08fcf81152c6608fe984b9d988a6e3b74f92a2489034e1abaf857197086d\nintern1:md5$d1d813a48d99f0e102f7d0a1b9068001\n```\n\nThe company's password policy is that everyone picks a word from this list:\n\n```text\nanchor beacon cinder cobalt compass dune ember falcon granite harbour juniper kestrel lantern marble meadow nectar orchid pebble quartz ripple saffron sunrise thunder timber umber velvet violet willow yarrow zephyr\n```\n\nRecover the password of `ops_admin` and submit `UCC{password}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 61, "cost": 0, "content": null}, {"id": 62, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-cryptography", "cryptography", "hashing", "salting", "training"], "solves": 132, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:32.727511+00:00", "saved_files": []}, "75": {"id": "75", "title": "Nonce Nuisance", "category": "Cryptography", "points": 200, "type": "dynamic_iac", "description": "Submit the `UCC{...}` value you recover.\n\n**Scenario.** A fictional vault seals a note with a SHA-256 counter-mode stream cipher and says it uses a fresh nonce for every message. You can encrypt your own text. Compare what the service says with what it does.", "connection_info": null, "file_urls": [], "hints": [{"id": 80, "cost": 0, "content": null}, {"id": 81, "cost": 0, "content": null}, {"id": 82, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "instance", "path-cryptography", "cryptography", "stream-cipher", "nonce-reuse", "training"], "solves": 96, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:34.090459+00:00", "saved_files": []}, "90": {"id": "90", "title": "Echo Chamber", "category": "Cryptography", "points": 300, "type": "standard", "description": "A fictional field relay reuses its session key for every message sent within the same session (a classic nonce-reuse bug), but each session gets its own fresh, independent key. Four intercepted messages are below.\n\n```text\nsession       tag       ciphertext_hex\nSID-0b7e      banner    83d42b9ed23baa713cc2f85ac8166e93347287ffb15d37936a7aa37ebd46068d626e06c84944aff1\nSID-2bdc      relay-3   b03d97fcd4196a\nSID-0b7e      relay-7   bef314b6ef7f8454\nSID-850b      relay-9   e27ae441cc0699\n```\n\nIt is well known that a session's very first message (`tag=banner`) is always exactly this fixed text, byte for byte:\n\n```text\nRELAY-OK|UCC-FIELD-NODE|STANDBY-SIGNAL-0\n```\n\nExactly one other message shares its session with a `banner` message. Recover that session's keystream from its banner, decrypt the other message in that same session, and submit `UCC{word}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 124, "cost": 0, "content": null}, {"id": 125, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-cryptography", "cryptography", "stream-cipher", "nonce-reuse", "crib-dragging", "training"], "solves": 101, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:35.190060+00:00", "saved_files": []}, "93": {"id": "93", "title": "Forged Command", "category": "Cryptography", "points": 300, "type": "standard", "description": "A fictional command runner authenticates each command with `mac = H(secret || message)`, using this home-grown, Merkle-Damgard-style hash (this is the exact source the service runs \u2014 no off-the-shelf length-extension tool knows this construction):\n\n```python\nBLOCK = 16\nROUNDS = 8\nIV = bytes(range(16)) # 00 01 02 ... 0f\n\ndef _rotl(x, r):\n return ((x << r) | (x >> (8 - r))) & 0xFF\n\ndef compress(state, block):\n \"\"\"Mix one 16-byte block into the 16-byte state.\"\"\"\n s = bytearray(state)\n for i in range(BLOCK):\n s[i] = (s[i] + block[i]) & 0xFF\n for _ in range(ROUNDS):\n t = bytearray(BLOCK)\n for i in range(BLOCK):\n t[i] = (s[i] + s[(i + 1) % BLOCK]) & 0xFF\n t[i] ^= _rotl(s[(i + 7) % BLOCK], 3)\n s = t\n return bytes(s)\n\ndef pad(msg_len):\n \"\"\"0x80, then zeros, then the 64-bit little-endian bit length, filling\n to a multiple of BLOCK.\"\"\"\n p = b\"\\x80\"\n while (msg_len + len(p)) % BLOCK != 8:\n p += b\"\\x00\"\n p += struct.pack(\"", "connection_info": null, "file_urls": [], "hints": [{"id": 130, "cost": 0, "content": null}, {"id": 131, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-cryptography", "cryptography", "hash-construction", "length-extension", "training"], "solves": 98, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:36.355496+00:00", "saved_files": []}, "49": {"id": "49", "title": "Quiet Beacon", "category": "Networking", "points": 100, "type": "standard", "description": "Review the synthetic flow records. Find the client that queried the same name at regular 60-second intervals three times, then identify the queried domain. Submit `UCC{client_ip_domain}` with dots replaced by underscores. The fixture uses documentation-only addresses and proves no real activity.\n\n```text\nTIME      CLIENT        SERVICE/RECORD\n10:00:00  10.24.8.14    DNS A? portal.training.example\n10:00:08  10.24.8.14    TCP -> 198.51.100.40:443\n10:00:12  10.24.8.19    DNS A? sync.training.example\n10:01:26  10.24.8.14    DNS A? portal.training.example\n10:01:12  10.24.8.19    DNS A? sync.training.example\n10:02:00  10.24.8.14    DNS A? portal.training.example\n10:02:12  10.24.8.19    DNS A? sync.training.example\n10:03:00  10.24.8.14    TCP -> 198.51.100.40:443\n```\n\n[Review the networking path](/training-networking).", "connection_info": null, "file_urls": [], "hints": [{"id": 30, "cost": 0, "content": null}, {"id": 31, "cost": 0, "content": null}], "tags": ["cyber-stars-training", "dns", "networking", "path-networking", "traffic-analysis", "training"], "solves": 148, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:37.708426+00:00", "saved_files": []}, "57": {"id": "57", "title": "DNS Name Tag", "category": "Networking", "points": 10, "type": "standard", "description": "Read the synthetic DNS answer and submit UCC{hostname_address}. Replace dots in the address with underscores.\n\nquery: A? printer.training.example\nanswer: printer.training.example A 192.0.2.25\n\nThe address is reserved for documentation. No network lookup is needed.", "connection_info": null, "file_urls": [], "hints": [{"id": 46, "cost": 0, "content": null}, {"id": 47, "cost": 0, "content": null}], "tags": ["starter", "networking", "dns", "training"], "solves": 141, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:39.092063+00:00", "saved_files": []}, "68": {"id": "68", "title": "DNS Detective", "category": "Networking", "points": 125, "type": "standard", "description": "A fictional network team exported DNS queries from their resolver. One internal host is quietly exfiltrating a short secret through the subdomain labels of a single domain, **in numbered chunks** (some retransmitted). Another host also queries long labels, but they carry no numbering and decode to nothing.\n\n```text\n09:00:06  10.20.4.37  00-kvbug6.t.cdn-metrics.example.test                         TXT\n09:00:07  10.20.4.37  00-kvbug6.t.cdn-metrics.example.test                         TXT\n09:00:12  10.20.4.37  01-3enzzv.t.cdn-metrics.example.test                         TXT\n09:00:16  10.20.4.37  02-6m3dga.t.cdn-metrics.example.test                         TXT\n09:00:19  10.20.4.37  03-zggzrs.t.cdn-metrics.example.test                         TXT\n09:00:20  10.20.4.37  03-zggzrs.t.cdn-metrics.example.test                         TXT\n09:00:27  10.20.4.37  04-hfsten.t.cdn-metrics.example.test                         TXT\n09:00:30  10.20.4.11  updates.example.test                                         AAAA\n09:00:30  10.20.4.37  05-zxpu.t.cdn-metrics.example.test                           TXT\n09:00:34  10.20.4.11  static.example.test                                          A\n09:00:36  10.20.4.19  www.example.test                                             A\n09:00:40  10.20.4.19  api.example.test                                             A\n09:00:42  10.20.4.23  static.example.test                                          AAAA\n09:00:46  10.20.4.23  cdn.assets-example.test                                      AAAA\n09:00:50  10.20.4.23  time.example.test                                            A\n09:00:52  10.20.4.19  www.example.test                                             TXT\n09:00:56  10.20.4.11  www.example.test                                             A\n09:00:56  10.20.4.19  time.example.test                                            A\n09:01:00  10.20.4.23  login.example.test                                           A\n09:01:01  10.20.4.52  iveyziyolpwj6qidypdkqfizywjk3f.t.cdn-metrics.example.test    TXT\n09:01:04  10.20.4.23  static.example.test                                          A\n09:01:06  10.20.4.19  mail.example.test                                            AAAA\n09:01:08  10.20.4.23  api.example.test                                             A\n09:01:11  10.20.4.19  api.example.test                                             A\n09:01:13  10.20.4.52  l2ibf4dcqvvv6z2tsphzsxgqvrayuk.t.cdn-metrics.example.test    AAAA\n09:01:14  10.20.4.19  time.example.test                                            TXT\n09:01:14  10.20.4.23  mail.example.test                                            A\n09:01:16  10.20.4.19  updates.example.test                                         A\n09:01:16  10.20.4.52  4wlxi2pdvc2mdcp2e6efpz2oro6p7d.t.cdn-metrics.example.test    TXT\n09:01:18  10.20.4.11  login.example.test                                           AAAA\n09:01:18  10.20.4.11  static.example.test                                          A\n09:01:21  10.20.4.52  mail.example.test                                            TXT\n09:01:25  10.20.4.23  cdn.assets-example.test                                      TXT\n09:01:27  10.20.4.52  api.example.test                                             A\n```\n\nReassemble the data in order (de-duplicate retransmissions). It is Base32 (case-insensitive, padding removed). Submit the decoded flag exactly as recovered.", "connection_info": null, "file_urls": [], "hints": [{"id": 63, "cost": 0, "content": null}, {"id": 64, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-networking", "networking", "dns", "exfiltration", "training"], "solves": 135, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:40.311159+00:00", "saved_files": []}, "76": {"id": "76", "title": "Handshake Stories", "category": "Networking", "points": 200, "type": "dynamic_iac", "description": "Submit the `UCC{...}` value you recover.\n\n**Scenario.** A field unit authenticates with a PIN-keyed challenge-response handshake. A packet capture from an earlier session was left on the server. Understand the protocol, then authenticate as `ops`.", "connection_info": null, "file_urls": [], "hints": [{"id": 83, "cost": 0, "content": null}, {"id": 84, "cost": 0, "content": null}, {"id": 85, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "instance", "path-networking", "networking", "authentication", "protocol-analysis", "training"], "solves": 89, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:41.474760+00:00", "saved_files": []}, "98": {"id": "98", "title": "Fragmented Trail", "category": "Networking", "points": 200, "type": "standard", "description": "A capture recorded two interleaved TCP streams out of arrival order, with some segments retransmitted (logged twice, identical sequence number and payload). Reassembly must go by **sequence number**, not log order, and duplicate (seq, payload) pairs should only be counted once.\n\n```text\nstream              seq   payload_hex\nstream-3c98         1360  6572\nstream-0fab         2181  ea88\nstream-0fab         2174  cac6\nstream-3c98         1360  6572\nstream-3c98         1360  6572\nstream-3c98         1355  676c\nstream-0fab         2179  0d3e\nstream-0fab         2176  d82cec\nstream-3c98         1357  616369\nstream-0fab         2183  8a\n```\n\nIsolate the one stream that carries a readable word, reassemble its payload bytes in sequence-number order (deduplicating retransmissions), decode as ASCII, and submit `UCC{word}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 146, "cost": 0, "content": null}, {"id": 147, "cost": 0, "content": null}, {"id": 148, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-networking", "networking", "tcp", "reassembly", "packet-analysis", "training"], "solves": 96, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:42.822681+00:00", "saved_files": []}, "50": {"id": "50", "title": "Bucket Boundary", "category": "Cloud Security", "points": 100, "type": "standard", "description": "A fictional training account contains three role policies. Identify the role whose statement permits every object action across every bucket path. Submit `UCC{role_name}` with underscores instead of hyphens.\n\n```json\n[\n  {\"role\":\"course-reader\",\"effect\":\"Allow\",\"action\":[\"object:GetObject\"],\"resource\":\"bucket/course-materials/lesson/*\"},\n  {\"role\":\"report-builder\",\"effect\":\"Allow\",\"action\":[\"object:ListBucket\",\"object:GetObject\"],\"resource\":\"bucket/weekly-reports/*\"},\n  {\"role\":\"emergency-restore\",\"effect\":\"Allow\",\"action\":[\"object:*\"],\"resource\":\"bucket/*/*\"}\n]\n```\n\nCompare both action breadth and resource breadth. This is a static synthetic review; no cloud account is accessed. [Review the cloud path](/training-cloud-security).", "connection_info": null, "file_urls": [], "hints": [{"id": 32, "cost": 0, "content": null}, {"id": 33, "cost": 0, "content": null}], "tags": ["cloud", "cyber-stars-training", "iam", "least-privilege", "path-cloud-security", "training"], "solves": 142, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:44.053201+00:00", "saved_files": []}, "61": {"id": "61", "title": "Public by Mistake", "category": "Cloud Security", "points": 10, "type": "standard", "description": "A security review of a fictional company's object storage lists each bucket's ACL and its account-level **PublicAccessBlock** setting (`true` overrides any public grant). `AllUsers` means anyone on the internet; `AuthenticatedUsers` means any logged-in cloud account holder.\n\nBucket: cs-reports-prod\n```json\n{\n \"Grants\": [\n  {\n   \"Grantee\": \"owner\",\n   \"Permission\": \"FULL_CONTROL\"\n  }\n ],\n \"PublicAccessBlock\": true\n}\n```\n\nBucket: cs-assets-prod\n```json\n{\n \"Grants\": [\n  {\n   \"Grantee\": \"owner\",\n   \"Permission\": \"FULL_CONTROL\"\n  }\n ],\n \"PublicAccessBlock\": true\n}\n```\n\nBucket: cs-exports-prod\n```json\n{\n \"Grants\": [\n  {\n   \"Grantee\": \"owner\",\n   \"Permission\": \"FULL_CONTROL\"\n  },\n  {\n   \"Grantee\": \"http://acs.amazonaws.com/groups/global/AuthenticatedUsers\",\n   \"Permission\": \"READ\"\n  }\n ],\n \"PublicAccessBlock\": false\n}\n```\n\nBucket: cs-archive-prod\n```json\n{\n \"Grants\": [\n  {\n   \"Grantee\": \"owner\",\n   \"Permission\": \"FULL_CONTROL\"\n  },\n  {\n   \"Grantee\": \"http://acs.amazonaws.com/groups/global/AllUsers\",\n   \"Permission\": \"READ\"\n  }\n ],\n \"PublicAccessBlock\": true\n}\n```\n\nBucket: cs-invoices-prod\n```json\n{\n \"Grants\": [\n  {\n   \"Grantee\": \"owner\",\n   \"Permission\": \"FULL_CONTROL\"\n  },\n  {\n   \"Grantee\": \"http://acs.amazonaws.com/groups/global/AllUsers\",\n   \"Permission\": \"READ\"\n  }\n ],\n \"PublicAccessBlock\": false\n}\n```\n\nBucket: cs-backups-prod\n```json\n{\n \"Grants\": [\n  {\n   \"Grantee\": \"owner\",\n   \"Permission\": \"FULL_CONTROL\"\n  }\n ],\n \"PublicAccessBlock\": true\n}\n```\n\nExactly one bucket is **effectively readable by anyone on the internet**. Submit `UCC{bucket_name}` with hyphens changed to underscores.", "connection_info": null, "file_urls": [], "hints": [{"id": 50, "cost": 0, "content": null}, {"id": 51, "cost": 0, "content": null}], "tags": ["ladder", "tier-1-starter", "path-cloud-security", "cloud", "storage", "training"], "solves": 130, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:45.455214+00:00", "saved_files": []}, "69": {"id": "69", "title": "Wildcard Policy", "category": "Cloud Security", "points": 125, "type": "standard", "description": "Fictional cloud IAM evaluation: an **explicit Deny always wins**, otherwise any matching Allow grants access; default is deny. `*` in an action or resource matches any characters. A principal's effective statements come from its own policies **and** from every group it belongs to.\n\nPolicy ReadOnly\n```json\n[\n {\n  \"Effect\": \"Allow\",\n  \"Action\": [\n   \"s3:Get*\",\n   \"s3:List*\"\n  ],\n  \"Resource\": \"*\"\n }\n]\n```\n\nPolicy BuildBuckets\n```json\n[\n {\n  \"Effect\": \"Allow\",\n  \"Action\": \"s3:*\",\n  \"Resource\": \"arn:aws:s3:::cs-build-*\"\n }\n]\n```\n\nPolicy OpsWide\n```json\n[\n {\n  \"Effect\": \"Allow\",\n  \"Action\": \"s3:*\",\n  \"Resource\": \"*\"\n },\n {\n  \"Effect\": \"Deny\",\n  \"Action\": \"s3:Delete*\",\n  \"Resource\": \"arn:aws:s3:::cs-audit-logs/*\"\n }\n]\n```\n\nPolicy OldArchive\n```json\n[\n {\n  \"Effect\": \"Allow\",\n  \"Action\": \"s3:Delete*\",\n  \"Resource\": \"arn:aws:s3:::cs-audit-logs/2025/*\"\n }\n]\n```\n\nPolicy Archivers\n```json\n[\n {\n  \"Effect\": \"Allow\",\n  \"Action\": \"s3:Delete*\",\n  \"Resource\": \"arn:aws:s3:::cs-audit-logs/2026/*\"\n }\n]\n```\n\nPrincipals and groups:\n\n```text\nhawa: policies=- groups=Archivers\nyusuf: policies=ReadOnly groups=-\nmercy: policies=BuildBuckets groups=-\ntendo: policies=OpsWide groups=Archivers\nsamuel: policies=OldArchive groups=-\npeter: policies=ReadOnly groups=BuildTeam\ngroup Archivers: policies=Archivers\ngroup BuildTeam: policies=BuildBuckets\n```\n\nExactly one principal can perform `s3:DeleteObject` on `arn:aws:s3:::cs-audit-logs/2026/q3.log`. Submit `UCC{principal}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 65, "cost": 0, "content": null}, {"id": 66, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-cloud-security", "cloud", "iam", "policy-evaluation", "training"], "solves": 132, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:46.525326+00:00", "saved_files": []}, "77": {"id": "77", "title": "Role Chain", "category": "Cloud Security", "points": 200, "type": "dynamic_iac", "description": "Submit the `UCC{...}` value you recover.\n\n**Scenario.** A fictional CI runner has a cloud identity. A metadata service, a token service and object storage are exposed. The report you need is stored where the runner cannot read it directly. Find a path of allowed role switches.", "connection_info": null, "file_urls": [], "hints": [{"id": 86, "cost": 0, "content": null}, {"id": 87, "cost": 0, "content": null}, {"id": 88, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "instance", "path-cloud-security", "cloud", "iam", "privilege-escalation", "training"], "solves": 88, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:47.959240+00:00", "saved_files": []}, "96": {"id": "96", "title": "Trust Chain Break", "category": "Cloud Security", "points": 200, "type": "standard", "description": "A fictional cloud account's roles each have a trust policy: a list of `Allow`/`Deny` entries naming which other role may assume them. Matching uses shell-style wildcards (`*`). **An explicit `Deny` always overrides any `Allow` for that same (source, role) pair**, exactly like real IAM evaluation -- it does not matter how many `Allow` entries also match.\n\n```text\nAllow edge-ingest      -> relay-worker\nAllow metrics-agent    -> audit-reader\nAllow edge-ingest      -> audit-reader\nAllow relay-*          -> audit-reader\nAllow relay-worker     -> ops-admin\nAllow metrics-agent    -> backup-svc\nAllow metrics-agent    -> backup-svc\nAllow audit-reader     -> backup-svc\nDeny  backup-svc       -> metrics-agent\nDeny  backup-svc       -> metrics-agent\nDeny  edge-ingest      -> vault-keeper\nAllow ops-admin        -> vault-keeper\n```\n\nStarting from `edge-ingest`, find the one chain of role-assumptions (each hop allowed and not denied) that reaches `vault-keeper`. Submit `UCC{role1_role2_role3_role4}` using every role name on the path, in order, joined by underscores.", "connection_info": null, "file_urls": [], "hints": [{"id": 140, "cost": 0, "content": null}, {"id": 141, "cost": 0, "content": null}, {"id": 142, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-cloud-security", "cloud", "iam", "trust-policy", "privilege-escalation", "training"], "solves": 97, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:49.125222+00:00", "saved_files": []}, "51": {"id": "51", "title": "Lantern Ledger", "category": "OSINT", "points": 75, "type": "standard", "description": "A fictional public event has two conflicting venue notices. Use source date, authority, and provenance to find the current venue. Submit `UCC{venue_words}` with spaces replaced by underscores. All sources and names below are fabricated for this exercise.\n\n```text\nSOURCE A \u2014 event page, official.example.training/events/lantern\nUpdated: 12 Sep 2026 14:20 EAT\nNotice: CS26-17 (linked correction)\nCurrent venue: Training Annex East\n\nSOURCE B \u2014 poster v1, published 10 Sep 2026\nVenue: Training Annex West\nVersion: superseded\n\nSOURCE C \u2014 repost, 12 Sep 2026\nCopies poster v1; no source link or correction notice\n```\n\nCite the source and date that resolve the conflict. Do not search for or identify real people. [Review the OSINT path](/training-osint).", "connection_info": null, "file_urls": [], "hints": [{"id": 34, "cost": 0, "content": null}, {"id": 35, "cost": 0, "content": null}], "tags": ["cyber-stars-training", "osint", "path-osint", "source-analysis", "verification", "training"], "solves": 126, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:50.180134+00:00", "saved_files": []}, "62": {"id": "62", "title": "Badge Lookup", "category": "OSINT", "points": 10, "type": "standard", "description": "A public photo caption helps you identify an employee of a fictional company from its staff directory. Use only what the post says.\n\n```text\nPost, fictional social network, 2026-09-18: \"Quiet morning on the 1st floor. Our Finance team is the only one up here, and my lanyard badge ends in 23.\"\n```\n\nStaff directory:\n\n```text\nid        name               dept         floor\nEMP-4016  Felix Mugisha      Engineering  1\nEMP-7034  Joel Nabirye       Operations   2\nEMP-6123  Felix Achieng      Finance      1\nEMP-8426  Amina Achieng      Finance      2\nEMP-5762  Karen Mugisha      Security     2\nEMP-9761  Cynthia Kato       Finance      2\nEMP-7240  Karen Nabirye      Operations   5\nEMP-1977  Brian Nabirye      Operations   3\nEMP-6033  Louis Atim         Legal        3\nEMP-2297  Irene Nabirye      Finance      4\n```\n\nSubmit `UCC{employee_id}` in lowercase, with the hyphen changed to an underscore.", "connection_info": null, "file_urls": [], "hints": [{"id": 52, "cost": 0, "content": null}], "tags": ["ladder", "tier-1-starter", "path-osint", "osint", "attribution", "training"], "solves": 129, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:51.158834+00:00", "saved_files": []}, "70": {"id": "70", "title": "Handle Hunt", "category": "OSINT", "points": 100, "type": "standard", "description": "A fictional conference wants to find where its photographer is based now, using only public profile text. The press note identifies the photographer's PhotoWall handle; their bio explains how their other handle is formed.\n\nPress note: our event photographer is **Nabirye**, who posts on PhotoWall as @lensnabirye.\n\nPhotoWall profiles:\n\n```text\n@lensnabirye | Event photographer. Dev handle is the same name with 'lens' swapped for 'dev'. | city: Kampala\n@lensnamuli | Photographer. Dev handle: devlens (not the same name). | city: Fort Portal\n@lensokello | Weddings and portraits. | city: Gulu\n```\n\nCodeNest profiles:\n\n```text\n@devnamuli | Open-source contributor. Currently in Masaka.\n@devnabirye | Backend dev. Currently in Arua.\n@devlens | Parked handle.\n```\n\nSubmit `UCC{city}` with the city **named in the CodeNest profile** of the photographer's other handle, lowercase, spaces replaced by underscores.", "connection_info": null, "file_urls": [], "hints": [{"id": 67, "cost": 0, "content": null}, {"id": 68, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-osint", "osint", "pivoting", "training"], "solves": 131, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:52.231690+00:00", "saved_files": []}, "72": {"id": "72", "title": "Source Check", "category": "OSINT", "points": 200, "type": "standard", "description": "A fictional claim is spreading and you must find where it **really** came from. Each article states whether it is based on a primary document or relays another article (`via`). Republished or updated timestamps do **not** change the origin.\n\n```text\nA388 | Campus Pulse   | published 2026-10-13 12:24 | updated 12:24 | source: via A795\nA500 | Rift Report    | published 2026-10-13 13:06 | updated 13:06 | source: via A698\nA299 | Pearl Wire     | published 2026-10-13 09:00 | updated 12:50 | source: PRIMARY (court filing 2026-0412)\nA113 | Source Desk    | published 2026-10-13 11:15 | updated 11:15 | source: via A388\nA698 | Daily Lantern  | published 2026-10-13 17:17 | updated 17:17 | source: via A500\nA795 | Nile Courier   | published 2026-10-13 09:56 | updated 09:56 | source: via A907\nA409 | Metro Brief    | published 2026-10-13 13:03 | updated 13:03 | source: via A907\nA907 | Savannah Post  | published 2026-10-13 09:53 | updated 15:08 | source: via A299\n```\n\nStarting from article **A388**, follow the `via` links until you reach the article that cites a primary document. Submit `UCC{article_id}` of that origin article.", "connection_info": null, "file_urls": [], "hints": [{"id": 72, "cost": 0, "content": null}, {"id": 73, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "path-osint", "osint", "provenance", "verification", "training"], "solves": 131, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:53.647665+00:00", "saved_files": []}, "99": {"id": "99", "title": "Chain of Custody", "category": "OSINT", "points": 200, "type": "standard", "description": "A pivot starts from `@cold_harbor_e3a` on `ForumX`. Below are the matching profiles found on three platforms -- several handles on each platform look alike, but only one on each platform is the **exact** one named by the previous step.\n\n```text\n-- ForumX --\n@c5ld_harbor_e3a      New account, be nice.\n@cold_harbor_e3a      Also post at DevHub as wren_f41.\n@cold_harbor_e3a29    Coffee addict, part-time cyclist.\n@cold_harboR_e3a      DMs closed. Ask in the group chat.\n\n-- DevHub --\n@wre6_f41             New account, be nice.\n@wren_f91             Selling old gear, see pinned post.\n@wren_f41             Photos live at PhotoWall under atlas_41d.\n@Wren_f41             Coffee addict, part-time cyclist.\n\n-- PhotoWall --\n@atlas_46d            Coffee addict, part-time cyclist.\n@atlas_41d            The word you're looking for is cobalt.\n@atlas_41d_95         New account, be nice.\n@atla3_41d            DMs closed. Ask in the group chat.\n```\n\nFollow the chain by exact handle match only (case, punctuation and digits all count), one platform at a time, until you reach the word it names. Submit `UCC{word}`.", "connection_info": null, "file_urls": [], "hints": [{"id": 149, "cost": 0, "content": null}, {"id": 150, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-osint", "osint", "pivoting", "verification", "training"], "solves": 99, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:54.664918+00:00", "saved_files": []}, "87": {"id": "87", "title": "Welcome Aboard", "category": "Community", "points": 5, "type": "standard", "description": "UCC Cyber Stars runs its live announcements, outages, and participant support on Discord, not just this portal. Join the official server: **https://discord.gg/XX28BhvR3**\r\n\r\nThe flag for this challenge is pinned in the **#start-here** channel (also shown in the channel topic). It is not anywhere on this site.\r\n\r\nThis one is free. Keep direct messages about other challenges' flags or solutions out of the server \u2014 that is still a rules violation even here.", "connection_info": null, "file_urls": [], "hints": [{"id": 118, "cost": 0, "content": "Pinned messages in #start-here, and the channel topic line."}], "tags": ["ladder", "training", "community", "discord"], "solves": 90, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:55.407811+00:00", "saved_files": []}, "78": {"id": "78", "title": "Triage Queue", "category": "Incident Response", "points": 10, "type": "standard", "description": "You are the on-call analyst at a fictional regional telecom. The SIEM exported four days of alerts. The queue is noisy, and automation has already flagged several four-step sequences that look like intrusions: **repeated failed logins, a successful login from the same address, an encoded command, then a large transfer to an unusual destination.**\n\nOnly one of them is a real compromise. The others are explained by infrastructure in the asset inventory.\n\nFiles: `alerts.csv` (2,872 alerts) and `assets.csv` (known infrastructure).\n\nFind the real intrusion and submit `UCC{alert_id}` for its **first** alert (the first failed-login alert from the attacking address), lowercase, with the hyphen changed to an underscore (for example `UCC{a_000123}`).", "connection_info": null, "file_urls": ["/files/e29f4e188a4bf761114438554b84a73d/alerts.csv?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjQ1fQ.at_qbA.P6ObPEyf7ixspYjcfHZoZLGyQyw", "/files/23d029bda51453a21f1cd0851bd31823/assets.csv?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjQ2fQ.at_qbA.Qs4_eCGvysRcECJhQ5s4bJLBUvc"], "hints": [{"id": 89, "cost": 0, "content": null}, {"id": 90, "cost": 0, "content": null}, {"id": 91, "cost": 0, "content": null}], "tags": ["ladder", "tier-1-starter", "path-incident-response", "incident-response", "siem", "triage", "training"], "solves": 102, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:56.667117+00:00", "saved_files": ["challenges/78-triage-queue/files/alerts.csv", "challenges/78-triage-queue/files/assets.csv"]}, "79": {"id": "79", "title": "Slow Burn", "category": "Incident Response", "points": 75, "type": "standard", "description": "A fictional operator's customer portal sits behind nginx. Three days of its access log (about 28,337 requests) are attached (`access.log.gz`, standard *combined* format, timestamps in **local time, UTC+3**). Security later learned that a database backup was downloaded by someone who should not have been able to read it.\n\nThe log contains crawlers, uptime monitors, automated internet scanners, ordinary customers, and a legitimate nightly backup job that authenticates with HTTP basic auth. Most scanners are loud. The person you want is not.\n\nIdentify the address that downloaded the backup **without authenticating**, then find when that address **first appears in the log**.\n\nSubmit `UCC{ip_HHMMSS}` with the dots in the address changed to underscores and the time in **UTC** (24-hour, no separators), for example `UCC{203_0_113_9_142530}`.", "connection_info": null, "file_urls": ["/files/e415f0eecefb9cb3abecf5ffd4a88188/access.log.gz?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjQ3fQ.at_qbg.hy4HipMF5smzAytjGJcF9ElGL3I"], "hints": [{"id": 92, "cost": 0, "content": null}, {"id": 93, "cost": 0, "content": null}, {"id": 94, "cost": 0, "content": null}], "tags": ["ladder", "tier-2-core", "path-incident-response", "incident-response", "web-logs", "timeline", "training"], "solves": 103, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:03:59.041286+00:00", "saved_files": ["challenges/79-slow-burn/files/access.log.gz"]}, "80": {"id": "80", "title": "Beacon Hunt", "category": "Incident Response", "points": 125, "type": "standard", "description": "Threat intelligence says an implant on your fictional network is calling home on a timer with **random jitter**. Two Zeek logs from the internal sensor cover 36 hours: `conn.log.gz` (about 192,287 connections) and `dns.log.gz`.\n\nThings that look suspicious but are not: strictly periodic services (monitoring, time sync, update checks), and at least one chatty keep-alive to a very popular destination that many hosts also use. The implant's destination is rare: **only one internal host talks to it.**\n\nIdentify the **internal host**, the **destination IP** and the beacon's **typical interval in seconds** (the median time between its connections, rounded to a whole second).\n\nSubmit `UCC{host_destination_interval}` with the dots in both addresses changed to underscores (for example `UCC{10_0_0_5_203_0_113_9_300}`).", "connection_info": null, "file_urls": ["/files/622bae580d3011b4d4cc3ab2b8e25401/conn.log.gz?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjQ4fQ.at_qcA.bM1Lya2Z9TFoxK8Q48IvNQrRLWo", "/files/d6425f7fc25b93a06860f732bdb60fe6/dns.log.gz?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjQ5fQ.at_qcA.J-emJjxtquaggZHMX_5J3yOjEWw"], "hints": [{"id": 95, "cost": 0, "content": null}, {"id": 96, "cost": 0, "content": null}, {"id": 97, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-incident-response", "incident-response", "zeek", "beaconing", "network-forensics", "training"], "solves": 100, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:00.775982+00:00", "saved_files": ["challenges/80-beacon-hunt/files/conn.log.gz", "challenges/80-beacon-hunt/files/dns.log.gz"]}, "81": {"id": "81", "title": "Triage Console", "category": "Incident Response", "points": 200, "type": "dynamic_iac", "description": "Submit the `UCC{...}` value you recover.\n\n**Scenario.** You are on call at a fictional operator. Your instance is a mini-SIEM holding three days of telemetry (logons, web proxy, endpoint, firewall and DNS) with **one real intrusion** hidden among look-alikes: benign automation, blocked phishing attempts and expected backups. The delivery method is different on every instance. Read the console's help page, reconstruct the incident, and file the six findings. Mind the time zones. Searches are rate-limited, so hunt with intent.", "connection_info": null, "file_urls": [], "hints": [{"id": 98, "cost": 0, "content": null}, {"id": 99, "cost": 0, "content": null}, {"id": 100, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "instance", "path-incident-response", "incident-response", "siem", "threat-hunting", "training"], "solves": 78, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:07.683422+00:00", "saved_files": []}, "97": {"id": "97", "title": "Lateral Movement", "category": "Incident Response", "points": 200, "type": "standard", "description": "A fictional SOC's process-execution log is below, covering three independent process trees across three workstations. Known-good outbound destinations (already resolved and approved) are: `backup-sync.internal, update-relay.internal, metrics-collector.internal`. Every other outbound destination is unresolved and must be treated as suspicious.\n\n```text\nevent  host    process          parent  dst\ne11    WKS-19  explorer.exe     e10     backup-sync.internal\ne9     WKS-19  explorer.exe     e8      backup-sync.internal\ne10    WKS-19  conhost.exe      e9      update-relay.internal\ne3     WKS-07  powershell.exe   e2      -\ne4     WKS-07  rundll32.exe     e3      backup-sync.internal\ne8     WKS-19  winword.exe      -       -\ne1     WKS-07  powershell.exe   -       -\ne7     WKS-12  svchost.exe      e6      beacon-drop-05.ext\ne2     WKS-07  backup-agent.exe e1      -\ne5     WKS-12  explorer.exe     -       -\ne6     WKS-12  outlook.exe      e5      -\n```\n\nFollow the `parent` links to reconstruct each tree. Exactly one tree's final (leaf) event connects to a destination that is **not** on the allowlist -- that is the real lateral-movement chain. Submit `UCC{destination}` using that one unresolved destination exactly as logged.", "connection_info": null, "file_urls": [], "hints": [{"id": 143, "cost": 0, "content": null}, {"id": 144, "cost": 0, "content": null}, {"id": 145, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-incident-response", "incident-response", "process-tree", "lateral-movement", "training"], "solves": 91, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:09.040528+00:00", "saved_files": []}, "82": {"id": "82", "title": "Manifest Reader", "category": "Mobile Security", "points": 10, "type": "standard", "description": "A field-operations app from a fictional operator is about to ship. Security review has the signed release build (`fieldops-release.apk`). It declares several **content providers**: some are private, some are protected by a permission, and **one can be read by any other app installed on the same phone without asking for anything.**\n\nInspect the app's manifest (tools such as `aapt2 dump xmltree`, `apktool` or `jadx` will help; the manifest inside an APK is binary XML). Remember that an exported provider is only protected if a read permission applies to it.\n\nSubmit `UCC{authority}` for the unprotected exported provider, in lowercase, with the dots changed to underscores.", "connection_info": null, "file_urls": ["/files/47503f95e964bc1def87ab3aef071f4e/fieldops-release.apk?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjUwfQ.at_qeQ.PA-y4OI18SviHRuwaKVs-oCeHJM"], "hints": [{"id": 101, "cost": 0, "content": null}, {"id": 102, "cost": 0, "content": null}, {"id": 103, "cost": 0, "content": null}], "tags": ["ladder", "tier-1-starter", "path-mobile-security", "mobile", "android", "apk-analysis", "training"], "solves": 100, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:10.153787+00:00", "saved_files": ["challenges/82-manifest-reader/files/fieldops-release.apk"]}, "83": {"id": "83", "title": "Shared Secrets", "category": "Mobile Security", "points": 75, "type": "standard", "description": "A fictional operator's staff keep personal notes in an Android app, `vaultnotes.apk`. A phone was seized after an incident and the app's private data directory was imaged as `userdata.tar.gz` (shared preferences, files and SQLite databases, as pulled from `/data/data/`).\n\nThe note bodies in the database are encrypted. The app can open them, so everything needed is in the package and the image: but **notes were not all written under the same circumstances**, and the way the app picks its key matters. Work out how the app derives the key and opens a note, then read the notes.\n\nOne note holds a recovery code in the usual `UCC{...}` form. Submit it exactly.", "connection_info": null, "file_urls": ["/files/15b598b984c782f8a50e6c2cdfb88198/userdata.tar.gz?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjUxfQ.at_qew._i4uuEoMaywVQrdEOULynvH2Auo", "/files/25bfaa98f1e6b1a547f6314c4f7ed5c2/vaultnotes.apk?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjUyfQ.at_qew.GcYgCyLEi28czVhL3yuqOc08UkI"], "hints": [{"id": 104, "cost": 0, "content": null}, {"id": 105, "cost": 0, "content": null}, {"id": 106, "cost": 0, "content": null}], "tags": ["ladder", "tier-2-core", "path-mobile-security", "mobile", "android", "reverse-engineering", "forensics", "training"], "solves": 95, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:11.646987+00:00", "saved_files": ["challenges/83-shared-secrets/files/userdata.tar.gz", "challenges/83-shared-secrets/files/vaultnotes.apk"]}, "84": {"id": "84", "title": "Deep Link Gate", "category": "Mobile Security", "points": 125, "type": "standard", "description": "A fictional operator sells airtime vouchers. Its Android app, `redeemer-3.4.apk`, redeems an order when opened from a link of the form `ucc://redeem?order=&sig=`. The app rejects links whose signature is wrong, and the signing key is not stored anywhere obvious in the app.\n\nSupport needs a valid link for order **ORD-951102**, but the signing service is down. Work out exactly how the app builds and checks signatures (the current scheme, not an older one that is still in the code), and compute the signature for that order.\n\nSubmit `UCC{signature}` with the signature exactly as the app would expect it in the link.", "connection_info": null, "file_urls": ["/files/9c1fc3dea8833a30528ce5f15d74c45e/redeemer-3.4.apk?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjUzfQ.at_qfQ.VfadpEHxBmhqYD8ELXDaphOT9XQ"], "hints": [{"id": 107, "cost": 0, "content": null}, {"id": 108, "cost": 0, "content": null}, {"id": 109, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-mobile-security", "mobile", "android", "reverse-engineering", "hmac", "training"], "solves": 98, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:13.570515+00:00", "saved_files": ["challenges/84-deep-link-gate/files/redeemer-3.4.apk"]}, "85": {"id": "85", "title": "Packed Courier", "category": "Mobile Security", "points": 200, "type": "standard", "description": "A fictional operator's courier-tracking app, `courier-release.apk`, looks tiny: the visible code only loads something and shows a length. The real logic ships as an **encrypted module** inside the package and is unpacked at runtime. The developers claim it cannot be read unless the APK is the genuine, correctly signed build.\n\nRecover the module and read what it returns. The `UCC{...}` value it holds is your answer; submit it exactly.\n\nYou do not need a device. Everything required is inside the APK.", "connection_info": null, "file_urls": ["/files/750e8f86fc214dfec3703af04be6a23c/courier-release.apk?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjU0fQ.at_qfg.A1MvWsxZzZ8HTZDD4YMix372E4k"], "hints": [{"id": 110, "cost": 0, "content": null}, {"id": 111, "cost": 0, "content": null}, {"id": 112, "cost": 0, "content": null}, {"id": 113, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "path-mobile-security", "mobile", "android", "packing", "reverse-engineering", "training"], "solves": 103, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:15.192083+00:00", "saved_files": ["challenges/85-packed-courier/files/courier-release.apk"]}, "86": {"id": "86", "title": "Bytecode Bazaar", "category": "Mobile Security", "points": 300, "type": "standard", "description": "A fictional operator licenses its field tool with a 20-character key. The Android build, `bazaar-licence.apk`, does not compare the key to a string. It runs it through a **small virtual machine**: the checking program ships as an encrypted blob, and the interpreter's instruction encoding is private to this build.\n\nThe valid key is the inner part of a flag: `UCC{` + 20 characters + `}`. No other input is accepted, and nothing in the package states it outright. Recover the key by understanding the machine and reversing the program it runs, then submit the full flag.", "connection_info": null, "file_urls": ["/files/bbedf6f37b9a46f781a9d84d22330a28/bazaar-licence.apk?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjU1fQ.at_qgA.ZQk472BsnXm4FvKIJaciMrfwvNE"], "hints": [{"id": 114, "cost": 0, "content": null}, {"id": 115, "cost": 0, "content": null}, {"id": 116, "cost": 0, "content": null}, {"id": 117, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-mobile-security", "mobile", "android", "reverse-engineering", "custom-vm", "training"], "solves": 100, "max_attempts": 0, "source": "api", "solved": true, "scraped_at": "2026-10-27T00:04:16.753408+00:00", "saved_files": ["challenges/86-bytecode-bazaar/files/bazaar-licence.apk"]}, "88": {"id": "88", "title": "Flip the Switch", "category": "Binary Exploitation", "points": 10, "type": "standard", "description": "A fictional kiosk binary, `flip`, asks for an access code before it will print anything interesting. It is a real, statically-compiled 64-bit ELF (no PIE, no stack protector) -- run it, trace it, or just read it.\r\n\r\n`file flip` and a disassembler are enough: there is a guard variable sitting right next to an undersized buffer on the stack. You do not need to find a return address or build a ROP chain for this one -- just overflow the right amount into the right place.\r\n\r\nRun it locally (it needs no network, no server) and submit whatever it prints.", "connection_info": null, "file_urls": ["/files/c0bec22e06135f4cdfc0825dbd81460d/flip?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjU2fQ.auBCdA.q9QNGMv-rcU1gDDqzzcSVlbkScI"], "hints": [{"id": 119, "cost": 0, "content": null}, {"id": 120, "cost": 0, "content": null}], "tags": ["ladder", "tier-1-starter", "path-binary-exploitation", "binary-exploitation", "pwn", "stack-overflow", "training"], "solves": 0, "max_attempts": 0, "source": "api", "solved": false, "scraped_at": "2026-10-27T06:19:33.257135+00:00", "saved_files": ["challenges/88-flip-the-switch/files/flip"]}, "89": {"id": "89", "title": "Format Leak", "category": "Binary Exploitation", "points": 75, "type": "standard", "description": "A fictional diagnostic tool, `leak`, echoes back whatever you type -- but it hands your input straight to `printf` as the *format string itself*, not as data. That is a real, classic bug class: the flag is sitting somewhere else on this process's stack, and `printf`'s variadic machinery will happily read past its real arguments if you ask it to.\r\n\r\nRun the binary locally, feed it format specifiers like `%7$lx`, and scan outward until something looks like flag bytes read in 8-byte little-endian words. You will need more than a handful of positions -- the flag is not adjacent to where your input starts.\r\n\r\nSubmit the flag you recover.", "connection_info": null, "file_urls": ["/files/9f94e7272b686fe734881f7b74bd0869/leak?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjU3fQ.auBCdQ.Yg9QFEBivIT0J0ExkudYc8QztJc"], "hints": [{"id": 121, "cost": 0, "content": null}, {"id": 122, "cost": 0, "content": null}, {"id": 123, "cost": 0, "content": null}], "tags": ["ladder", "tier-2-core", "path-binary-exploitation", "binary-exploitation", "pwn", "format-string", "training"], "solves": 0, "max_attempts": 0, "source": "api", "solved": false, "scraped_at": "2026-10-27T06:19:33.836008+00:00", "saved_files": ["challenges/89-format-leak/files/leak"]}, "101": {"id": "101", "title": "Return Policy", "category": "Binary Exploitation", "points": 125, "type": "standard", "description": "A fictional kiosk binary, `win`, reads far more input than its buffer can hold and never checks the length. It is a real, statically-compiled 64-bit ELF (no PIE, no stack protector). Somewhere in the binary is a `print_flag` function that normal control flow never calls.\r\n\r\nFind the exact offset from the start of the overflowed buffer to the saved return address, find `print_flag`'s address (`nm`/`objdump`/your disassembler of choice), and redirect execution there.\r\n\r\nRun it locally (it needs no network, no server) and submit whatever it prints.", "connection_info": null, "file_urls": ["/files/eea4692ffbb3aa453d4d84e585d6e117/win?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjU4fQ.auBC9Q.ZMH4bCdeeAIdFQqyR4Gnkdved4M"], "hints": [{"id": 154, "cost": 0, "content": null}, {"id": 155, "cost": 0, "content": null}, {"id": 156, "cost": 0, "content": null}], "tags": ["ladder", "tier-3-stretch", "path-binary-exploitation", "binary-exploitation", "pwn", "ret2win", "training"], "solves": 0, "max_attempts": 0, "source": "api", "solved": false, "scraped_at": "2026-10-27T06:21:41.919700+00:00", "saved_files": ["challenges/101-return-policy/files/win"]}, "102": {"id": "102", "title": "Argument Control", "category": "Binary Exploitation", "points": 200, "type": "standard", "description": "A fictional kiosk binary, `win`, has the same unchecked overflow as before, but this time `print_flag` takes a 64-bit argument and only prints if it exactly matches a constant you can read straight out of the disassembly: that constant is `0x97477d`.\r\n\r\nA function's return address alone cannot set its arguments -- the x86-64 calling convention passes the first argument in `rdi`. You will need a small chain: something that pops a value into `rdi` and returns, before continuing on to `print_flag`.\r\n\r\nRun it locally (it needs no network, no server) and submit whatever it prints.", "connection_info": null, "file_urls": ["/files/06adddce44ab5d963a7cae4d63bac8b5/win?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjU5fQ.auBC9g.Wp2JQcz-fkbDgkTwy45nUr6g024"], "hints": [{"id": 157, "cost": 0, "content": null}, {"id": 158, "cost": 0, "content": null}, {"id": 159, "cost": 0, "content": null}], "tags": ["ladder", "tier-4-boss", "path-binary-exploitation", "binary-exploitation", "pwn", "rop", "training"], "solves": 0, "max_attempts": 0, "source": "api", "solved": false, "scraped_at": "2026-10-27T06:21:42.487704+00:00", "saved_files": ["challenges/102-argument-control/files/win"]}, "103": {"id": "103", "title": "Full Control", "category": "Binary Exploitation", "points": 300, "type": "standard", "description": "Same unchecked overflow as before, but the flag is split across two gated functions this time: `print_flag_part1` only prints if its argument is `0xb11e91`, and `print_flag_part2` only prints if its argument is `0xafe1c2`. A single ret2win jump calls one function; you need both halves.\r\n\r\nAfter a `pop rdi; ret` gadget loads a value and returns, execution continues to whatever address comes next on the stack -- so the same gadget can be reused for a second call, right after the first one returns.\r\n\r\nRun it locally (it needs no network, no server) and submit the two halves joined together, exactly as printed.", "connection_info": null, "file_urls": ["/files/65ae3305563774f6767aee1b570a1e5a/win?token=eyJ1c2VyX2lkIjoyNzMsInRlYW1faWQiOm51bGwsImZpbGVfaWQiOjYwfQ.auBC9g.xIQNBxfH-Zq4qhnGNa6o-dB9GsE"], "hints": [{"id": 160, "cost": 0, "content": null}, {"id": 161, "cost": 0, "content": null}, {"id": 162, "cost": 0, "content": null}], "tags": ["ladder", "tier-5-insane", "path-binary-exploitation", "binary-exploitation", "pwn", "rop", "training"], "solves": 0, "max_attempts": 0, "source": "api", "solved": false, "scraped_at": "2026-10-27T06:21:43.069912+00:00", "saved_files": ["challenges/103-full-control/files/win"]}};window.EMBED_F={"44": "UCC{mira_198_51_100_24}", "45": "UCC{219}", "46": "UCC{bytecode_breadcrumbs}", "47": "UCC{export_02}", "48": "UCC{xor_reuse_leaks_structure}", "49": "UCC{10_24_8_19_sync_training_example}", "50": "UCC{emergency_restore}", "51": "UCC{training_annex_east}", "52": "UCC{learner_practice}", "53": "UCC{640}", "54": "UCC{302_login}", "55": "UCC{alpha}", "56": "UCC{base64_warmup}", "57": "UCC{printer_192_0_2_25}", "60": "UCC{key_aw6c_yr7w_zl9u}", "61": "UCC{cs_invoices_prod}", "62": "UCC{emp_6123}", "63": "UCC{digest}", "64": "UCC{req-2046}", "65": "UCC{APP-753}", "69": "UCC{hawa}", "70": "UCC{arua}", "72": "UCC{A299}", "91": "UCC{req-389f}", "92": "UCC{srv-kla_compact}", "96": "UCC{edge_ingest_relay_worker_ops_admin_vault_keeper}", "97": "UCC{beacon-drop-05.ext}", "99": "UCC{cobalt}"};window.EMBED_V={"salt": "cl3-embedded", "h": {"44": "25e47d6832ad822212617644af2cea94dad3fd925c138dc7e29e0056ecaad096", "45": "617dcabc7eff0cf8182e92d521d236b0d25d6b983a42d2bccc34c07e883f5a67", "46": "5c02cbd1c9bb2cc8e7e9f65e45799cb6104ca761a3e192c10894c41b13eaea5f", "47": "d9049381f32b7dd63ea5d95926d07a36fc5f02d0a83867bf32283e4b6137ca2f", "48": "4ca3d050072740d7794f735d3187d21ff8784eb06a210325d925d30df1b65f12", "49": "1590d9f0921277dd2bc944d283c60d292f7ee3841ea6146c9ad9a9b9abc6cae2", "50": "c830e9720850f1fb9d00712b0ca424a622a0c742400e8c64632e70668c12721a", "51": "9db0b637396c8d727a4a9cd86721460e15b9bfd5b943000654102180616a3597", "52": "618a13f9771a395a8bc82d56931d353fbb0b7dc613c6fdfe0521ca4ee665750c", "53": "75371b899957d640f147dc84b5b58f048b823c128f753688e8bb5f3f7c1eceb2", "54": "6ea59dee44e8f692f88a1d150d62f26046a2a08c1089378350224b746eaedf0c", "55": "5a4db7509c4b3adf94883f806e11d661924698d009b270a416404585b8b31486", "56": "8fbbacfa61e08bed7a4b01fd99c49493f49bdfb53d16b5a017c3b2dd08f0b1e1", "57": "9bb093a178dd7bab60813fa664e11c2f6989ebc32858f39c020cf35ca787232a", "60": "ae0fc22772b779c4ea932fe2797adbff163e1a794a0f2f3365d341bd9d9f8807", "61": "773a95024aaeded94a638753989e15a81167514bc1668b843185f58a7a84fcfd", "62": "203beb81872e1a32e44730aa869f2efd22004996e7e09ccd6868515eacf7bb29", "63": "a89c51a3f90a166a9681c397603e64a35dffd3bd0a6f73c3a334bef26622885b", "64": "d9fdf71b08027f1133e2eaccf2a30039b0e25baf6d248579427eef353614c0f0", "65": "b292678c9704abed609dd6c5b07d854b7c37035acb8c64a4ae935903ba5e6f62", "69": "3cd85ac5bf4e30d8079b72c4c00b7b81798d32b5c4c02bea46890ce13d544c0b", "70": "739a80f9af1e2ac7ccea2192eb38b6cbb4a335d20fc672e8b5c5ae27ed64fd2e", "72": "c8d96022eac2eb5def69f42c0ef425e92d240ec7ca5adb212dd5afc5fc094750", "91": "955467b83f655ba1254673e9ab431d4869f1a636c2717404069160ae27ef6ba5", "92": "ef50ea36b9f0387889afb3244c0e55c4fcfd3b2692661ad29bb9ad77d2417f3e", "96": "488158f71d13128f8fac286443fe563cae64ac5120f71d816ee8b034cc84f838", "97": "9310a8a9eabd4b5217a360e52cddc3bf171753dcf9fcf876c9b3e755ef77ba91", "99": "d7ac9e8b00b7f253054a7ed04f266afb9ebaf9153eb4a3c192a88695399ff0ca"}};
+</script>
+<script>
+const $=i=>document.getElementById(i),QA=s=>[...document.querySelectorAll(s)];
+const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}};
+let V=ld('cl3.v',{salt:'',h:{}}),all=[],sel=null,P=ld('cl3.p',{}),F=ld('cl3.f',{}),user=localStorage.getItem('cl3.u')||'Operator',page='ws';
+const flagOf=id=>F[id]||(window.EMBED_F||{})[id],sv=()=>{localStorage.setItem('cl3.p',JSON.stringify(P));met()};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hsh=(id,f)=>dig('SHA-256',V.salt+'|'+id+'|'+f.trim());
+const pts=c=>+c.points||0,sol=id=>!!P[id]?.s,tags=c=>c.tags||[];
+const tier=c=>{const t=tags(c).find(x=>/^tier-\d/.test(x));return t?+t[5]:0};
+const path=c=>(tags(c).find(x=>/^path-/.test(x))||'path-other').slice(5);
+const TC=['#335','#22d3ee','#00ff9c','#ffb800','#ff7a2e','#ff2e6e'];
+const RK=[[0,'Script Kiddie'],[100,'Analyst'],[500,'Hunter'],[1500,'Operator'],[3000,'Ghost']];
+function fmt(s){return String(s||'No description.').split(/```(?:[\w-]+)?\n([\s\S]*?)```/).map((x,i)=>i%2?'<pre><button class="cp">copy</button><code>'+esc(x)+'</code></pre>':esc(x).replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>')).join('')}
+function met(){const d=all.filter(c=>sol(c.id)),p=d.reduce((n,c)=>n+pts(c),0);$('m1').textContent=all.length;$('m2').textContent=d.length;$('m3').textContent=p;$('m4').textContent=new Set(all.map(c=>c.category)).size;$('sb').style.width=(all.length?d.length/all.length*100:0)+'%';$('un').textContent=user;$('rk').textContent='RANK: '+RK.filter(r=>p>=r[0]).pop()[1]+' · '+p+' pts'}
+function list(){const q=$('q').value.toLowerCase(),cat=$('cat').value,st=$('st').value,so=$('so').value;
+let a=all.filter(c=>(!cat||c.category===cat)&&(!q||[c.title,c.description,c.category,...tags(c)].join(' ').toLowerCase().includes(q))&&(st==='a'||(st==='s')===sol(c.id)));
+a.sort((x,y)=>so==='pu'?pts(x)-pts(y):so==='pd'?pts(y)-pts(x):x.title.localeCompare(y.title));$('rc').textContent=a.length+' shown';
+$('list').innerHTML=a.map(c=>`<div class="ch ${c.id==sel?'on':''}" style="--tc:${TC[tier(c)]}" data-id="${esc(c.id)}"><h4>${esc(c.title)}</h4><span class="pill">${esc(c.category)}</span><span class="pill">${pts(c)} pts</span>${tier(c)?'<span class="pill">T'+tier(c)+'</span>':''}${sol(c.id)?'<span class="pill g">✓ solved</span>':''}</div>`).join('')||'<p class="sm">No match.</p>';
+QA('.ch').forEach(e=>e.onclick=()=>show(e.dataset.id))}
+function fb(m,k){$('fbk').innerHTML=`<div class="fb ${k}">${m}</div>`}
+function show(id){sel=id;const c=all.find(x=>x.id==id);if(!c)return;list();const p=P[id]||{},hs=c.hints||[],n=p.h||0;
+$('det').innerHTML=`<div class="row"><span class="pill g">${esc(c.category)}</span><span class="pill">${pts(c)} pts</span><span class="pill">${esc(c.type||'standard')}</span>${tier(c)?'<span class="pill">tier '+tier(c)+'</span>':''}${c.solves?'<span class="pill">'+c.solves+' solves</span>':''}${sol(id)?'<span class="pill g">✓ solved</span>':''}${p.x?'<span class="pill r">'+p.x+' failed</span>':''}${p.r?'<span class="pill r">revealed</span>':''}${V.h[id]?'<span class="pill">key loaded</span>':''}</div><h2>${esc(c.title)}</h2><div class="sm">ID ${esc(id)} · ${esc(tags(c).slice(0,6).join(' · '))}</div><hr><div class="desc">${fmt(c.description)}</div>
+${(c.saved_files||[]).length?'<p class="sm">Attached files: '+c.saved_files.map(f=>'<code>'+esc(typeof f==='string'?f:f.name||f.path||JSON.stringify(f))+'</code>').join(' ')+'</p>':''}<hr><b>Hints</b> <span class="sm">(${n}/${hs.length} used)</span>
+<div id="hints">${hs.slice(0,n).map((h,i)=>`<div class="fb hn">#${i+1} ${h.content?esc(h.content):'Not available offline for instance challenges.'}</div>`).join('')}</div>${n<hs.length?'<button id="hb" style="margin-top:8px">Reveal hint '+(n+1)+'</button>':''}<hr>
+<b>Submit</b><input class="in" id="ans" autocomplete="off" spellcheck="false" placeholder="UCC{...}" value="${esc(p.a||'')}" style="margin:8px 0"><div class="row"><button class="pri" id="chk">Check flag</button>${flagOf(id)?'<button id="rv">Reveal flag</button>':''}${V.h[id]&&!sol(id)?'':'<button id="mk">'+(sol(id)?'Unmark solved':'Mark solved')+'</button>'}</div><div id="fbk"></div>
+<hr><b>Notes / writeup</b><textarea id="nt" style="min-height:130px;margin-top:8px" placeholder="Tools used, approach, what you learned...">${esc(p.n||'')}</textarea><div class="sm">${p.d?'Solved '+new Date(p.d).toLocaleString():'Autosaved locally.'}</div>`;
+if($('hb'))$('hb').onclick=()=>{P[id]={...P[id],h:n+1};sv();show(id)};
+$('chk').onclick=async()=>{const a=$('ans').value.trim();P[id]={...P[id],a};sv();if(!a)return fb('Enter a response.','er');if(!/^UCC\{[^{}\r\n]+\}$/.test(a))return fb('Invalid format. Expected <code>UCC{...}</code>.','er');const k=V.h[id];if(!k)return fb('Format valid. No answer key for this challenge, so correctness is unverified. Add keys in the Vault tab.','hn');
+if(await hsh(id,a)===k){const w=P[id].x;P[id]={...P[id],a,s:true,d:Date.now()};sv();show(id);fb('✔ ACCESS GRANTED. Correct flag, +'+pts(c)+' points'+(w?' after '+w+' failed attempt(s).':', first try!'),'ok')}else{P[id]={...P[id],x:(P[id].x||0)+1};sv();fb('✖ ACCESS DENIED. Wrong flag. Failed attempts: '+P[id].x,'er')}};
+if($('rv'))$('rv').onclick=()=>{if(!confirm('Reveal the flag? This is a spoiler.'))return;P[id]={...P[id],r:1};sv();fb('Flag: <code>'+esc(flagOf(id))+'</code> <button id="rc">copy</button>','hn');$('rc').onclick=e=>{navigator.clipboard&&navigator.clipboard.writeText(flagOf(id));e.target.textContent='copied'}};
+if($('mk'))$('mk').onclick=()=>{const s=!sol(id);P[id]={...P[id],s,d:s?Date.now():null};sv();show(id)};
+$('nt').oninput=e=>{P[id]={...P[id],n:e.target.value};sv()};
+QA('.cp').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.parentNode.querySelector('code').textContent);b.textContent='done'})}
+function paths(){const g={};all.forEach(c=>(g[path(c)]=g[path(c)]||[]).push(c));
+$('paths').innerHTML=Object.keys(g).sort().map(k=>{const a=g[k].sort((x,y)=>tier(x)-tier(y)||pts(x)-pts(y)),d=a.filter(c=>sol(c.id)).length,nx=a.find(c=>!sol(c.id));
+return `<div class="box" style="margin-bottom:12px"><div class="row" style="justify-content:space-between"><b>${esc(k.replace(/-/g,' ').toUpperCase())}</b><span class="sm">${d}/${a.length}</span></div><div class="prog"><div style="width:${d/a.length*100}%"></div></div><div class="lad">${a.map(c=>`<div class="node ${sol(c.id)?'d':c===nx?'n':''}" data-id="${esc(c.id)}">T${tier(c)} ${esc(c.title)} · ${pts(c)}</div>`).join('')}</div>${nx?'<span class="sm">Next up: '+esc(nx.title)+'</span>':'<span class="pill g">path complete</span>'}</div>`}).join('');
+QA('.node').forEach(n=>n.onclick=()=>{go('ws');show(n.dataset.id)})}
+function bars(title,f){const m={};all.forEach(c=>{const k=f(c);m[k]=m[k]||[0,0];m[k][1]++;sol(c.id)&&m[k][0]++});return `<h3>${title}</h3>`+Object.entries(m).sort().map(([k,v])=>`<div class="brow"><span>${esc(k)}</span><div class="prog"><div style="width:${v[0]/v[1]*100}%"></div></div><span class="sm">${v[0]}/${v[1]}</span></div>`).join('')}
+function stats(){const d=all.filter(c=>sol(c.id)),w=Object.entries(all.reduce((m,c)=>{const k=c.category;m[k]=m[k]||[0,0];m[k][1]++;sol(c.id)&&m[k][0]++;return m},{})).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1])[0];
+const days={};d.filter(c=>P[c.id].d).forEach(c=>{const k=new Date(P[c.id].d).toISOString().slice(0,10);days[k]=(days[k]||0)+1});const hu=Object.values(P).reduce((n,p)=>n+(p.h||0),0),nn=Object.values(P).filter(p=>p.n).length;
+$('sbox').innerHTML=`<p><b>${d.length}</b> of ${all.length} solved · <b>${d.reduce((n,c)=>n+pts(c),0)}</b> points · <b>${hu}</b> hints used · <b>${nn}</b> writeups</p>${w?'<p class="hn fb">Focus area: '+esc(w[0])+' ('+w[1][0]+'/'+w[1][1]+' solved)</p>':''}${bars('By category',c=>c.category)}${bars('By tier',c=>'Tier '+tier(c))}<h3>Solve days</h3><p class="sm">${Object.entries(days).sort().map(([k,v])=>k+' ×'+v).join(' · ')||'No dated solves yet.'}</p><hr><div class="row"><button id="ip">Import portal solved status (${all.filter(c=>c.solved&&!sol(c.id)).length})</button><button class="dng" id="rs">Reset all</button></div>`;
+$('ip').onclick=()=>{all.forEach(c=>{if(c.solved&&!sol(c.id))P[c.id]={...P[c.id],s:true,d:null}});sv();stats()};
+$('rs').onclick=()=>{if(confirm('Erase all local progress and notes?')){P={};sv();stats();list()}}}
+const rot=(s,n)=>s.replace(/[a-z]/gi,ch=>{const b=ch<'a'?65:97;return String.fromCharCode((ch.charCodeAt(0)-b+n+26*30)%26+b)});
+const hx=s=>new TextDecoder().decode(Uint8Array.from(s.replace(/0x|[\s,:]/g,'').match(/../g)||[],h=>parseInt(h,16)));
+const b64=s=>decodeURIComponent(escape(atob(s.trim().replace(/-/g,'+').replace(/_/g,'/'))));
+function sha256js(m){const r=(x,n)=>x>>>n|x<<32-n;let K=[],H=[],i,j,p,n=0;for(i=2;n<64;i++){for(p=1,j=2;j*j<=i;j++)if(i%j<1)p=0;if(p){if(n<8)H[n]=Math.pow(i,.5)%1*4294967296|0;K[n++]=Math.pow(i,1/3)%1*4294967296|0}}const b=[...new TextEncoder().encode(m)],l=b.length*8;b.push(128);while(b.length%64!=56)b.push(0);for(i=0;i<4;i++)b.push(0);for(i=3;i>=0;i--)b.push(l>>>i*8&255);for(let o=0;o<b.length;o+=64){const w=[];for(i=0;i<16;i++)w[i]=b[o+i*4]<<24|b[o+i*4+1]<<16|b[o+i*4+2]<<8|b[o+i*4+3];for(i=16;i<64;i++){const a=w[i-15],c=w[i-2];w[i]=w[i-16]+(r(a,7)^r(a,18)^a>>>3)+w[i-7]+(r(c,17)^r(c,19)^c>>>10)|0}let[a,q,c,d,e,f,g,h]=H;for(i=0;i<64;i++){const t1=h+(r(e,6)^r(e,11)^r(e,25))+(e&f^~e&g)+K[i]+w[i]|0,t2=(r(a,2)^r(a,13)^r(a,22))+(a&q^a&c^q&c)|0;h=g;g=f;f=e;e=d+t1|0;d=c;c=q;q=a;a=t1+t2|0}H=[a,q,c,d,e,f,g,h].map((v,k)=>v+H[k]|0)}return H.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('')}
+const dig=async(a,s)=>window.crypto&&crypto.subtle?[...new Uint8Array(await crypto.subtle.digest(a,new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join(''):sha256js(s);
+const pr=s=>s&&s.length>0&&[...s].filter(c=>c.charCodeAt(0)>=32&&c.charCodeAt(0)<127||c=='\n').length/s.length>.9;
+const TL=[['Auto-detect',s=>{const o=[];for(const[n,f]of[['base64',b64],['hex',hx],['url',decodeURIComponent],['binary',x=>x.replace(/[^01]/g,'').match(/.{8}/g).map(b=>String.fromCharCode(parseInt(b,2))).join('')],['rot13',x=>rot(x,13)]])try{const r=f(s);if(r!==s&&pr(r))o.push(n+': '+r)}catch{}return o.join('\n\n')||'No readable decoding found.'}],
+['B64 enc',s=>btoa(unescape(encodeURIComponent(s)))],['B64 dec',b64],['Hex enc',s=>[...new TextEncoder().encode(s)].map(b=>b.toString(16).padStart(2,'0')).join(' ')],['Hex dec',hx],['URL enc',encodeURIComponent],['URL dec',decodeURIComponent],['ROT13',s=>rot(s,13)],['Reverse',s=>[...s].reverse().join('')],
+['Caesar all',s=>Array.from({length:25},(_,i)=>(i+1)+': '+rot(s,i+1)).join('\n')],['Caesar key',(s,k)=>rot(s,+k||0)],
+['XOR key',(s,k)=>{const b=/^[0-9a-f\s]+$/i.test(s)&&s.replace(/\s/g,'').length%2==0?hx(s):s,kk=/^0x/i.test(k)?hx(k):k;if(!kk)throw Error('Enter a key');return [...b].map((c,i)=>String.fromCharCode(c.charCodeAt(0)^kk.charCodeAt(i%kk.length))).join('')}],
+['SHA-256',s=>dig('SHA-256',s)],['SHA-1',s=>dig('SHA-1',s)],['JWT',s=>s.trim().split('.').slice(0,2).map(x=>JSON.stringify(JSON.parse(b64(x)),null,2)).join('\n')],
+['Timestamp',s=>{s=s.trim();if(/^\d+$/.test(s)){const n=+s;return new Date(n>1e12?n:n*1000).toISOString()}const t=Date.parse(s);if(isNaN(t))throw Error('Unrecognized');return 'epoch s: '+t/1000+'\nepoch ms: '+t}]];
+$('tbtn').innerHTML=TL.map((t,i)=>`<button data-i="${i}">${t[0]}</button>`).join('');
+QA('#tbtn button').forEach(b=>b.onclick=async()=>{try{$('tout').value=await TL[b.dataset.i][1]($('tin').value,$('tkey').value)}catch(e){$('tout').value='Error: '+e.message}});
+$('lg').onclick=()=>{const m={},ok=[];$('tin').value.split('\n').forEach(l=>{const ip=(l.match(/\b\d{1,3}(?:\.\d{1,3}){3}\b/)||[])[0];if(!ip)return;const x=m[ip]=m[ip]||{f:0,a:0,u:new Set,t:[]};if(/fail|invalid|denied|40[134]/i.test(l))x.f++;else if(/accept|success|200/i.test(l)){x.a++;ok.push(l)}const u=(l.match(/for (?:invalid user )?(\S+) from/)||[])[1];u&&x.u.add(u);const t=(l.match(/\d\d:\d\d:\d\d/)||[])[0];t&&x.t.push(t)});
+const r=Object.entries(m).sort((a,b)=>b[1].f-a[1].f);$('tout').value=r.length?'IP | failed | accepted | users | time range\n'+r.map(([ip,x])=>[ip,x.f,x.a,[...x.u].join(','),x.t[0]?x.t[0]+'-'+x.t.at(-1):''].join(' | ')).join('\n')+'\n\nACCEPTED LINES\n'+(ok.join('\n')||'none'):'No IPs found in input.'};
+const vst=()=>localStorage.setItem('cl3.v',JSON.stringify(V)),vmet=()=>{$('vn').textContent=Object.keys(V.h).length};
+$('vb').onclick=async()=>{try{if(!V.salt)V.salt='cl3-embedded';let n=0,b=0;for(const l of $('vin').value.split(/\r?\n/)){if(!l.trim())continue;const m=l.match(/^\s*(\d+)\s*[:=,]\s*(UCC\{[^{}\r\n]+\})\s*$/);if(!m||/unverified/i.test(m[2])||(all.length&&!all.some(c=>c.id==m[1]))){b++;continue}V.h[m[1]]=await hsh(m[1],m[2]);F[m[1]]=m[2];n++}vst();localStorage.setItem('cl3.f',JSON.stringify(F));if(n)$('vin').value='';$('vm').textContent=n+' key(s) added'+(b?', '+b+' line(s) skipped (bad format, unknown id, or placeholder). Use id: UCC{...}.':'.')}catch(e){$('vm').textContent='Error: '+e.message}vmet();sel&&show(sel)};
+$('vd').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(V)],{type:'application/json'}));a.download='flags.hash.json';a.click()};
+$('vl').onclick=()=>$('vf').click();$('vf').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.salt||!d.h)throw Error('Not a vault file.');V=d;vst();vmet();$('vm').textContent='Vault loaded.'}catch(x){alert(x.message)}e.target.value=''};
+$('vc').onclick=()=>{if(confirm('Remove all loaded keys?')){V={salt:'',h:{}};F={};localStorage.removeItem('cl3.f');vst();vmet()}};
+function go(p){page=p;['ws','paths','tools','stats','about','vault'].forEach(x=>$(x).classList.toggle('hide',x!==p));QA('[data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===p));const T={ws:'Challenge workspace',paths:'Learning paths',tools:'Toolbox',stats:'Stats and progress',vault:'Flag vault',about:'About'};$('pt').textContent=T[p];$('cmd').textContent=p;if(p==='paths')paths();if(p==='stats')stats();if(p==='vault')vmet()}
+function boot(json){all=Object.values(json).filter(x=>x&&x.id!==undefined);const cs=[...new Set(all.map(c=>c.category))].sort();$('cat').innerHTML='<option value="">All categories</option>'+cs.map(c=>`<option>${esc(c)}</option>`).join('');met();list();all.length&&show(all[0].id)}
+async function init(){try{const f=await fetch('./flags.hash.json');if(f.ok&&!Object.keys(V.h).length){const d=await f.json();if(d.salt&&d.h){V=d;vst()}}}catch{}if(window.EMBED_V){if(!V.salt||!Object.keys(V.h).length){V=window.EMBED_V}else if(V.salt===window.EMBED_V.salt)V.h={...window.EMBED_V.h,...V.h};vst()}try{const r=await fetch('./challenges.json');if(!r.ok)throw Error('HTTP '+r.status);boot(await r.json())}catch(e){if(window.EMBED_C){boot(window.EMBED_C);return}$('det').innerHTML='<h2>Could not load challenges.json</h2><p class="sm">'+esc(e.message)+'. Start <code>python3 -m http.server 8000</code> in this folder, or load the file here:</p><input type="file" id="lf" accept=".json">';$('lf').onchange=async x=>boot(JSON.parse(await x.target.files[0].text()))}}
+QA('[data-p]').forEach(b=>b.onclick=()=>go(b.dataset.p));['q','cat','st','so'].forEach(i=>$(i).addEventListener(i==='q'?'input':'change',list));
+$('chu').onclick=()=>{$('ni').value=user;$('pm').classList.remove('hide')};$('nc').onclick=()=>$('pm').classList.add('hide');$('ns').onclick=()=>{user=$('ni').value.trim()||'Operator';localStorage.setItem('cl3.u',user);$('pm').classList.add('hide');met()};
+$('ex').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({v:3,user,P,at:new Date().toISOString()},null,1)],{type:'application/json'}));a.download='cyberlab-progress.json';a.click()};
+$('im').onclick=()=>$('imf').click();$('imf').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.P)throw Error('Not a V3 backup.');P=d.P;user=d.user||user;localStorage.setItem('cl3.u',user);sv();list();sel&&show(sel)}catch(x){alert(x.message)}e.target.value=''};
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||page!=='ws')return;if(e.key==='/'){e.preventDefault();$('q').focus()}if(e.key==='j'||e.key==='k'){const ids=QA('.ch').map(x=>x.dataset.id),i=ids.indexOf(String(sel));const n=ids[Math.max(0,Math.min(ids.length-1,i+(e.key==='j'?1:-1)))];n&&show(n)}});
+init();
+</script>
+<script src="CRITICAL_THREAT_QUARANTINE/do_not/hbabeiaex2817/345617yaggybb/hr/script.js"></script>
+</body>
+</html>
